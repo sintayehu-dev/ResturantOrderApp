@@ -4,7 +4,7 @@ import { useFood } from '../../contexts/FoodContext';
 import { useMenu } from '../../contexts/MenuContext';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
-import '../menus/MenuList.css'; // Reusing the same CSS for consistency
+import './FoodList.css'; // Reusing the same CSS for consistency
 
 const FoodList = () => {
   const { foods, loading, error, fetchFoods, createFood, updateFood, deleteFood, getNextFoodId } = useFood();

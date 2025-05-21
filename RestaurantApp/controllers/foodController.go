@@ -182,6 +182,9 @@ func UpdateFood() gin.HandlerFunc {
 			}
 		}
 
+		// Preserve the primary key ID to ensure GORM performs an UPDATE, not an INSERT
+		food.ID = existingFood.ID
+
 		err := databases.DB.WithContext(ctx).Save(&food).Error
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to update food item. Please try again later."})
