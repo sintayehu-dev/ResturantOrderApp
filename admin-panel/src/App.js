@@ -38,11 +38,11 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
                 <Route index element={<Navigate to="/dashboard" replace />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="menus" element={<MenuList />} />
-                <Route path="menus/:menuId" element={<MenuDetail />} />
-                <Route path="foods" element={<FoodList />} />
-                <Route path="foods/:foodId" element={<FoodDetail />} />
+                <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="menus" element={<ProtectedRoute><MenuList /></ProtectedRoute>} />
+                <Route path="menus/:menuId" element={<ProtectedRoute><MenuDetail /></ProtectedRoute>} />
+                <Route path="foods" element={<ProtectedRoute><FoodList /></ProtectedRoute>} />
+                <Route path="foods/:foodId" element={<ProtectedRoute><FoodDetail /></ProtectedRoute>} />
                 {/* Add more routes here */}
               </Route>
               <Route path="*" element={<Navigate to="/dashboard" replace />} />

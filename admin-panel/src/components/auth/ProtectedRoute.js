@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
     return <div>Loading...</div>; // You can replace this with a proper loading component
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated()) {
     // Redirect to login page but save the attempted url
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
