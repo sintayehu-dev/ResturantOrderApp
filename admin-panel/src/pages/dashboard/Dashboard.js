@@ -1,9 +1,73 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
+import { useOrder } from '../../contexts/OrderContext';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { orders, fetchOrders, loading } = useOrder();
+  const navigate = useNavigate();
+  const [recentOrders, setRecentOrders] = useState([]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
+  useEffect(() => {
+    // Get only the most recent 5 orders
+    if (orders && orders.length > 0) {
+      const sortedOrders = [...orders]
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .slice(0, 5);
+      setRecentOrders(sortedOrders);
+    }
+  }, [orders]);
+
+  const handleNewOrder = () => {
+    navigate('/orders', { state: { openCreateModal: true } });
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(price);
+  };
+
+  const formatDate = (dateString) => {
+    try {
+      return new Date(dateString).toLocaleString();
+    } catch (e) {
+      return dateString;
+    }
+  };
+
+  const getStatusBadge = (status) => {
+    let badgeClass = '';
+    
+    switch(status.toLowerCase()) {
+      case 'pending':
+        badgeClass = 'bg-warning';
+        break;
+      case 'preparing':
+        badgeClass = 'bg-info';
+        break;
+      case 'ready':
+        badgeClass = 'bg-primary';
+        break;
+      case 'completed':
+        badgeClass = 'bg-success';
+        break;
+      case 'cancelled':
+        badgeClass = 'bg-danger';
+        break;
+      default:
+        badgeClass = 'bg-secondary';
+    }
+    
+    return badgeClass;
+  };
 
   return (
     <Container fluid className="p-3 p-md-4 fade-in">
@@ -18,7 +82,11 @@ const Dashboard = () => {
             <i className="bi bi-download"></i>
             <span className="d-none d-sm-inline" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Export Report</span>
           </Button>
-          <Button variant="primary" className="d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0">
+          <Button 
+            variant="primary" 
+            className="d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0"
+            onClick={handleNewOrder}
+          >
             <i className="bi bi-plus-lg"></i>
             <span className="d-none d-sm-inline" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>New Order</span>
           </Button>
@@ -34,7 +102,7 @@ const Dashboard = () => {
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
                   <h6 className="card-title mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Total Orders</h6>
-                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>150</h2>
+                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>{orders?.length || 0}</h2>
                 </div>
                 <div className="bg-white bg-opacity-20 rounded-circle p-2 p-md-3">
                   <i className="bi bi-cart text-white fs-4"></i>
@@ -43,6 +111,7 @@ const Dashboard = () => {
               <div className="d-flex align-items-center">
                 <span className="badge bg-white bg-opacity-20 me-2">
                   <i className="bi bi-arrow-up me-1"></i>
+                  {/* Placeholder - could calculate from actual data */}
                   12%
                 </span>
                 <small className="text-white-50" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>from last month</small>
@@ -58,7 +127,9 @@ const Dashboard = () => {
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
                   <h6 className="card-title mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Revenue</h6>
-                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>$12,500</h2>
+                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>
+                    {formatPrice(orders?.reduce((total, order) => total + (parseFloat(order.order_total) || 0), 0) || 0)}
+                  </h2>
                 </div>
                 <div className="bg-white bg-opacity-20 rounded-circle p-2 p-md-3">
                   <i className="bi bi-currency-dollar text-white fs-4"></i>
@@ -108,7 +179,12 @@ const Dashboard = () => {
             <Card.Body className="p-3 p-md-4">
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <h5 className="card-title mb-0" style={{ fontSize: '78.75%', fontWeight: '500' }}>Recent Orders</h5>
-                <Button variant="link" className="text-decoration-none p-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>
+                <Button 
+                  variant="link" 
+                  className="text-decoration-none p-0" 
+                  style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+                  onClick={() => navigate('/orders')}
+                >
                   View All
                 </Button>
               </div>
@@ -117,34 +193,42 @@ const Dashboard = () => {
                   <thead>
                     <tr>
                       <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Order ID</th>
-                      <th className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: '500' }}>Customer</th>
-                      <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Items</th>
+                      <th className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: '500' }}>Table</th>
+                      <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Date</th>
                       <th className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: '500' }}>Amount</th>
                       <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>#ORD-001</td>
-                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>John Doe</td>
-                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>3 items</td>
-                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>$45.00</td>
-                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}><span className="badge bg-success">Completed</span></td>
-                    </tr>
-                    <tr>
-                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>#ORD-002</td>
-                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>Jane Smith</td>
-                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>2 items</td>
-                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>$32.50</td>
-                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}><span className="badge bg-warning">Processing</span></td>
-                    </tr>
-                    <tr>
-                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>#ORD-003</td>
-                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>Mike Johnson</td>
-                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>4 items</td>
-                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>$67.80</td>
-                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}><span className="badge bg-info">Preparing</span></td>
-                    </tr>
+                    {loading ? (
+                      <tr>
+                        <td colSpan="5" className="text-center">
+                          <div className="spinner-border spinner-border-sm text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : recentOrders.length > 0 ? (
+                      recentOrders.map((order) => (
+                        <tr key={order.order_id} style={{cursor: 'pointer'}} onClick={() => navigate(`/orders/${order.order_id}`)}>
+                          <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{order.order_id}</td>
+                          <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{order.table_id}</td>
+                          <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{formatDate(order.created_at)}</td>
+                          <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{formatPrice(order.order_total)}</td>
+                          <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>
+                            <span className={`badge ${getStatusBadge(order.order_status)}`}>
+                              {order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1)}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="5" className="text-center py-3" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>
+                          No recent orders found
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -158,8 +242,13 @@ const Dashboard = () => {
             <Card.Body className="p-3 p-md-4">
               <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Quick Actions</h5>
               <div className="d-grid gap-2">
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
-                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Add New Menu Item</span>
+                <Button 
+                  variant="outline-primary" 
+                  className="d-flex align-items-center justify-content-between" 
+                  style={{ fontSize: '86.625%', fontWeight: 'bold' }}
+                  onClick={handleNewOrder}
+                >
+                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Create New Order</span>
                   <i className="bi bi-plus-lg"></i>
                 </Button>
                 <Button variant="outline-primary" className="d-flex align-items-center justify-content-between" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>

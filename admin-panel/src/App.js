@@ -12,10 +12,13 @@ import MenuDetail from './pages/menus/MenuDetail';
 import { MenuProvider } from './contexts/MenuContext';
 import { FoodProvider } from './contexts/FoodContext';
 import { TableProvider } from './contexts/TableContext';
+import { OrderProvider } from './contexts/OrderContext';
 import FoodList from './pages/foods/FoodList';
 import FoodDetail from './pages/foods/FoodDetail';
 import TableList from './pages/tables/TableList';
 import TableDetail from './pages/tables/TableDetail';
+import OrderList from './pages/orders/OrderList';
+import OrderDetail from './pages/orders/OrderDetail';
 
 // Layout component for protected routes
 const DashboardLayout = () => (
@@ -36,24 +39,28 @@ function App() {
       <MenuProvider>
         <FoodProvider>
           <TableProvider>
-            <Router>
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-                  <Route index element={<Navigate to="/dashboard" replace />} />
-                  <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                  <Route path="menus" element={<ProtectedRoute><MenuList /></ProtectedRoute>} />
-                  <Route path="menus/:menuId" element={<ProtectedRoute><MenuDetail /></ProtectedRoute>} />
-                  <Route path="foods" element={<ProtectedRoute><FoodList /></ProtectedRoute>} />
-                  <Route path="foods/:foodId" element={<ProtectedRoute><FoodDetail /></ProtectedRoute>} />
-                  <Route path="tables" element={<ProtectedRoute><TableList /></ProtectedRoute>} />
-                  <Route path="tables/:tableId" element={<ProtectedRoute><TableDetail /></ProtectedRoute>} />
-                  {/* Add more routes here */}
-                </Route>
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
-              </Routes>
-            </Router>
+            <OrderProvider>
+              <Router>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+                    <Route index element={<Navigate to="/dashboard" replace />} />
+                    <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                    <Route path="menus" element={<ProtectedRoute><MenuList /></ProtectedRoute>} />
+                    <Route path="menus/:menuId" element={<ProtectedRoute><MenuDetail /></ProtectedRoute>} />
+                    <Route path="foods" element={<ProtectedRoute><FoodList /></ProtectedRoute>} />
+                    <Route path="foods/:foodId" element={<ProtectedRoute><FoodDetail /></ProtectedRoute>} />
+                    <Route path="tables" element={<ProtectedRoute><TableList /></ProtectedRoute>} />
+                    <Route path="tables/:tableId" element={<ProtectedRoute><TableDetail /></ProtectedRoute>} />
+                    <Route path="orders" element={<ProtectedRoute><OrderList /></ProtectedRoute>} />
+                    <Route path="orders/:orderId" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
+                    {/* Add more routes here */}
+                  </Route>
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+              </Router>
+            </OrderProvider>
           </TableProvider>
         </FoodProvider>
       </MenuProvider>
