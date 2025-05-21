@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/auth/Login';
@@ -10,15 +10,18 @@ import Sidebar from './components/layout/Sidebar';
 import MenuList from './pages/menus/MenuList';
 import MenuDetail from './pages/menus/MenuDetail';
 import { MenuProvider } from './contexts/MenuContext';
+import { FoodProvider } from './contexts/FoodContext';
+import FoodList from './pages/foods/FoodList';
+import FoodDetail from './pages/foods/FoodDetail';
 
 // Layout component for protected routes
-const DashboardLayout = ({ children }) => (
+const DashboardLayout = () => (
   <div className="d-flex">
     <Sidebar />
     <div className="flex-grow-1">
       <Navbar />
       <main className="bg-light min-vh-100">
-        {children}
+        <Outlet />
       </main>
     </div>
   </div>
@@ -26,59 +29,28 @@ const DashboardLayout = ({ children }) => (
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          
-          {/* Protected routes */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Dashboard />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          
-          {/* Menu Routes */}
-          <Route
-            path="/menus"
-            element={
-              <ProtectedRoute>
-                <MenuProvider>
-                  <DashboardLayout>
-                    <MenuList />
-                  </DashboardLayout>
-                </MenuProvider>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/menus/:menuId"
-            element={
-              <ProtectedRoute>
-                <MenuProvider>
-                  <DashboardLayout>
-                    <MenuDetail />
-                  </DashboardLayout>
-                </MenuProvider>
-              </ProtectedRoute>
-            }
-          />
-          
-          {/* Redirect root to dashboard */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          
-          {/* Catch all route - redirect to dashboard */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </AuthProvider>
-    </Router>
+    <AuthProvider>
+      <MenuProvider>
+        <FoodProvider>
+          <Router>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="menus" element={<MenuList />} />
+                <Route path="menus/:menuId" element={<MenuDetail />} />
+                <Route path="foods" element={<FoodList />} />
+                <Route path="foods/:foodId" element={<FoodDetail />} />
+                {/* Add more routes here */}
+              </Route>
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </Router>
+        </FoodProvider>
+      </MenuProvider>
+    </AuthProvider>
   );
 }
 
