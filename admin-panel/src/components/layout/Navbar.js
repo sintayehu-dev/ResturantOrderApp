@@ -20,7 +20,7 @@ const NavigationBar = () => {
           <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-2">
             <i className="bi bi-shop text-primary"></i>
           </div>
-          <span className="fw-bold text-primary d-none d-sm-inline">Restaurant Admin</span>
+          <span className="fw-bold text-primary d-none d-sm-inline" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>Restaurant Admin</span>
         </Navbar.Brand>
 
         {/* Mobile Menu Toggle */}
@@ -41,11 +41,11 @@ const NavigationBar = () => {
           id="offcanvasNavbar-expand-lg"
         >
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Menu</Offcanvas.Title>
+            <Offcanvas.Title style={{ fontSize: '73.5%', fontWeight: 'bold' }}>Menu</Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav className="flex-column">
-              <Nav.Link href="#notifications" className="d-flex align-items-center py-3">
+              <Nav.Link href="#notifications" className="d-flex align-items-center py-3" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
                 <i className="bi bi-bell fs-5 me-2"></i>
                 Notifications
                 <Badge 
@@ -56,15 +56,15 @@ const NavigationBar = () => {
                   3
                 </Badge>
               </Nav.Link>
-              <Nav.Link href="#profile" className="d-flex align-items-center py-3">
+              <Nav.Link href="#profile" className="d-flex align-items-center py-3" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
                 <i className="bi bi-person me-2"></i>
                 Profile
               </Nav.Link>
-              <Nav.Link href="#settings" className="d-flex align-items-center py-3">
+              <Nav.Link href="#settings" className="d-flex align-items-center py-3" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
                 <i className="bi bi-gear me-2"></i>
                 Settings
               </Nav.Link>
-              <Nav.Link onClick={handleLogout} className="d-flex align-items-center py-3 text-danger">
+              <Nav.Link onClick={handleLogout} className="d-flex align-items-center py-3 text-danger" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
                 <i className="bi bi-box-arrow-right me-2"></i>
                 Logout
               </Nav.Link>
@@ -75,7 +75,7 @@ const NavigationBar = () => {
         {/* Desktop Menu */}
         <div className="d-none d-lg-flex align-items-center">
           <Nav className="me-3">
-            <Nav.Link href="#notifications" className="position-relative p-2">
+            <Nav.Link href="#notifications" className="position-relative p-2" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
               <i className="bi bi-bell fs-5"></i>
               <Badge 
                 bg="danger" 
@@ -93,7 +93,7 @@ const NavigationBar = () => {
                 <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-2">
                   <i className="bi bi-person-circle text-primary"></i>
                 </div>
-                <span>{user?.name || 'Admin'}</span>
+                <span style={{ fontSize: '73.5%', fontWeight: 'bold' }}>{user?.name || 'Admin'}</span>
               </div>
             } 
             id="basic-nav-dropdown"
@@ -101,23 +101,23 @@ const NavigationBar = () => {
             className="custom-dropdown"
           >
             <div className="px-3 py-2 border-bottom">
-              <h6 className="mb-0">{user?.name || 'Admin User'}</h6>
-              <small className="text-muted">{user?.email || 'admin@example.com'}</small>
+              <h6 className="mb-0" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>{user?.name || 'Admin User'}</h6>
+              <small className="text-muted" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>{user?.email || 'admin@example.com'}</small>
             </div>
             
-            <NavDropdown.Item href="#profile" className="d-flex align-items-center">
+            <NavDropdown.Item href="#profile" className="d-flex align-items-center" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
               <i className="bi bi-person me-2"></i>
               Profile
             </NavDropdown.Item>
             
-            <NavDropdown.Item href="#settings" className="d-flex align-items-center">
+            <NavDropdown.Item href="#settings" className="d-flex align-items-center" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
               <i className="bi bi-gear me-2"></i>
               Settings
             </NavDropdown.Item>
             
             <NavDropdown.Divider />
             
-            <NavDropdown.Item onClick={handleLogout} className="d-flex align-items-center text-danger">
+            <NavDropdown.Item onClick={handleLogout} className="d-flex align-items-center text-danger" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
               <i className="bi bi-box-arrow-right me-2"></i>
               Logout
             </NavDropdown.Item>

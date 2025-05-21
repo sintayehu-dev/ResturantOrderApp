@@ -65,8 +65,8 @@ const Sidebar = ({ isMobile, show, onHide }) => {
           </div>
           {!isCollapsed && (
             <div className="flex-grow-1 ms-3">
-              <h5 className="mb-0 text-white">Restaurant Admin</h5>
-              <small className="text-white-50">Management System</small>
+              <h5 className="mb-0 text-white" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>Restaurant Admin</h5>
+              <small className="text-white-50" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>Management System</small>
             </div>
           )}
         </div>
@@ -75,7 +75,7 @@ const Sidebar = ({ isMobile, show, onHide }) => {
       <div className="p-3">
         {!isCollapsed && (
           <div className="mb-3 px-3">
-            <small className="text-white-50 text-uppercase fw-bold">Main Menu</small>
+            <small className="text-white-50 text-uppercase fw-bold" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>Main Menu</small>
           </div>
         )}
         <Nav className="flex-column">
@@ -90,7 +90,7 @@ const Sidebar = ({ isMobile, show, onHide }) => {
               onClick={isMobile ? onHide : undefined}
             >
               <i className={`${item.icon} ${isCollapsed ? 'mx-auto' : 'me-3'}`}></i>
-              {!isCollapsed && <span>{item.title}</span>}
+              {!isCollapsed && <span style={{ fontSize: '73.5%', fontWeight: 'bold' }}>{item.title}</span>}
             </Nav.Link>
           ))}
         </Nav>
@@ -105,8 +105,8 @@ const Sidebar = ({ isMobile, show, onHide }) => {
               </div>
             </div>
             <div className="flex-grow-1 ms-3">
-              <h6 className="mb-0 text-white">Settings</h6>
-              <small className="text-white-50">Version 1.0.0</small>
+              <h6 className="mb-0 text-white" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>Settings</h6>
+              <small className="text-white-50" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>Version 1.0.0</small>
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ const Sidebar = ({ isMobile, show, onHide }) => {
         style={{ width: '280px' }}
       >
         <Offcanvas.Header closeButton closeVariant="white">
-          <Offcanvas.Title className="text-white">Menu</Offcanvas.Title>
+          <Offcanvas.Title className="text-white" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>Menu</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body className="p-0">
           <SidebarContent />

@@ -45,16 +45,72 @@
   font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(67, 97, 238, 0.1);
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(67, 97, 238, 0.15);
 }
 
 .action-icon-btn {
   font-size: 0.8rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Edit button styling */
+.edit-btn {
+  color: #5c6bc0; /* Medium indigo */
+  border-color: #5c6bc0;
+  background-color: rgba(92, 107, 192, 0.1);
+}
+
+.edit-btn:hover {
+  color: #ffffff;
+  background-color: #5c6bc0;
+  border-color: #5c6bc0;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(92, 107, 192, 0.3);
+}
+
+/* Delete button styling */
+.delete-btn {
+  color: #303f9f; /* Dark indigo */
+  border-color: #303f9f;
+  background-color: rgba(48, 63, 159, 0.1);
+}
+
+.delete-btn:hover {
+  color: #ffffff;
+  background-color: #303f9f;
+  border-color: #303f9f;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(48, 63, 159, 0.3);
+}
+
+.action-icon-btn:focus {
+  box-shadow: none;
+  outline: none;
 }
 
 .menu-link {
   font-size: 0.9rem;
   font-weight: 500;
   color: #4361ee;
+  transition: color 0.2s ease;
+}
+
+.menu-link:hover {
+  color: #1937b3;
+  text-decoration: underline !important;
 }
 
 /* Modal styling */
@@ -73,6 +129,9 @@
 .form-input, .form-select {
   font-size: 0.9rem;
   color: #333;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  padding: 0.5rem 0.75rem;
 }
 
 .form-error {
@@ -83,4 +142,28 @@
   font-size: 0.9rem;
   font-weight: 500;
   padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.cancel-button {
+  color: #6c757d;
+  border: 1px solid #6c757d;
+}
+
+.cancel-button:hover {
+  background-color: #f1f3f5;
+  color: #495057;
+  border-color: #5a6268;
+}
+
+.submit-button {
+  background-color: #4361ee;
+  border: none;
+}
+
+.submit-button:hover {
+  background-color: #3a56d4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
 } 

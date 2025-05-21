@@ -10,17 +10,17 @@ const Dashboard = () => {
       {/* Header Section */}
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-          <h1 className="h3 mb-1">Welcome back, {user?.name || 'Admin'}!</h1>
-          <p className="text-muted mb-0">Here's what's happening with your restaurant today.</p>
+          <h1 className="h3 mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Welcome back, {user?.name || 'Admin'}!</h1>
+          <p className="text-muted mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Here's what's happening with your restaurant today.</p>
         </div>
         <div className="d-flex gap-2 w-100 w-md-auto">
           <Button variant="outline-primary" className="d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0">
             <i className="bi bi-download"></i>
-            <span className="d-none d-sm-inline">Export Report</span>
+            <span className="d-none d-sm-inline" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Export Report</span>
           </Button>
           <Button variant="primary" className="d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0">
             <i className="bi bi-plus-lg"></i>
-            <span className="d-none d-sm-inline">New Order</span>
+            <span className="d-none d-sm-inline" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>New Order</span>
           </Button>
         </div>
       </div>
@@ -33,8 +33,8 @@ const Dashboard = () => {
             <div className="card-body p-3 p-md-4">
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
-                  <h6 className="card-title mb-1">Total Orders</h6>
-                  <h2 className="display-6 display-md-4 mb-0">150</h2>
+                  <h6 className="card-title mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Total Orders</h6>
+                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>150</h2>
                 </div>
                 <div className="bg-white bg-opacity-20 rounded-circle p-2 p-md-3">
                   <i className="bi bi-cart text-white fs-4"></i>
@@ -45,7 +45,7 @@ const Dashboard = () => {
                   <i className="bi bi-arrow-up me-1"></i>
                   12%
                 </span>
-                <small className="text-white-50">from last month</small>
+                <small className="text-white-50" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>from last month</small>
               </div>
             </div>
           </div>
@@ -57,8 +57,8 @@ const Dashboard = () => {
             <div className="card-body p-3 p-md-4">
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
-                  <h6 className="card-title mb-1">Revenue</h6>
-                  <h2 className="display-6 display-md-4 mb-0">$12,500</h2>
+                  <h6 className="card-title mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Revenue</h6>
+                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>$12,500</h2>
                 </div>
                 <div className="bg-white bg-opacity-20 rounded-circle p-2 p-md-3">
                   <i className="bi bi-currency-dollar text-white fs-4"></i>
@@ -69,7 +69,7 @@ const Dashboard = () => {
                   <i className="bi bi-arrow-up me-1"></i>
                   8%
                 </span>
-                <small className="text-white-50">from last month</small>
+                <small className="text-white-50" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>from last month</small>
               </div>
             </div>
           </div>
@@ -81,8 +81,8 @@ const Dashboard = () => {
             <div className="card-body p-3 p-md-4">
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
-                  <h6 className="card-title mb-1">Active Tables</h6>
-                  <h2 className="display-6 display-md-4 mb-0">8/12</h2>
+                  <h6 className="card-title mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Active Tables</h6>
+                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>8/12</h2>
                 </div>
                 <div className="bg-white bg-opacity-20 rounded-circle p-2 p-md-3">
                   <i className="bi bi-grid-3x3 text-white fs-4"></i>
@@ -93,7 +93,7 @@ const Dashboard = () => {
                   <i className="bi bi-clock me-1"></i>
                   Live
                 </span>
-                <small className="text-white-50">Updated just now</small>
+                <small className="text-white-50" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Updated just now</small>
               </div>
             </div>
           </div>
@@ -107,8 +107,8 @@ const Dashboard = () => {
           <Card className="h-100">
             <Card.Body className="p-3 p-md-4">
               <div className="d-flex justify-content-between align-items-center mb-4">
-                <h5 className="card-title mb-0">Recent Orders</h5>
-                <Button variant="link" className="text-decoration-none p-0">
+                <h5 className="card-title mb-0" style={{ fontSize: '78.75%', fontWeight: '500' }}>Recent Orders</h5>
+                <Button variant="link" className="text-decoration-none p-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>
                   View All
                 </Button>
               </div>
@@ -116,34 +116,34 @@ const Dashboard = () => {
                 <table className="table table-hover align-middle mb-0">
                   <thead>
                     <tr>
-                      <th>Order ID</th>
-                      <th className="d-none d-md-table-cell">Customer</th>
-                      <th>Items</th>
-                      <th className="d-none d-md-table-cell">Amount</th>
-                      <th>Status</th>
+                      <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Order ID</th>
+                      <th className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: '500' }}>Customer</th>
+                      <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Items</th>
+                      <th className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: '500' }}>Amount</th>
+                      <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>#ORD-001</td>
-                      <td className="d-none d-md-table-cell">John Doe</td>
-                      <td>3 items</td>
-                      <td className="d-none d-md-table-cell">$45.00</td>
-                      <td><span className="badge bg-success">Completed</span></td>
+                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>#ORD-001</td>
+                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>John Doe</td>
+                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>3 items</td>
+                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>$45.00</td>
+                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}><span className="badge bg-success">Completed</span></td>
                     </tr>
                     <tr>
-                      <td>#ORD-002</td>
-                      <td className="d-none d-md-table-cell">Jane Smith</td>
-                      <td>2 items</td>
-                      <td className="d-none d-md-table-cell">$32.50</td>
-                      <td><span className="badge bg-warning">Processing</span></td>
+                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>#ORD-002</td>
+                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>Jane Smith</td>
+                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>2 items</td>
+                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>$32.50</td>
+                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}><span className="badge bg-warning">Processing</span></td>
                     </tr>
                     <tr>
-                      <td>#ORD-003</td>
-                      <td className="d-none d-md-table-cell">Mike Johnson</td>
-                      <td>4 items</td>
-                      <td className="d-none d-md-table-cell">$67.80</td>
-                      <td><span className="badge bg-info">Preparing</span></td>
+                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>#ORD-003</td>
+                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>Mike Johnson</td>
+                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>4 items</td>
+                      <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>$67.80</td>
+                      <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}><span className="badge bg-info">Preparing</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -156,22 +156,22 @@ const Dashboard = () => {
         <Col lg={4}>
           <Card className="h-100">
             <Card.Body className="p-3 p-md-4">
-              <h5 className="card-title mb-4">Quick Actions</h5>
+              <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Quick Actions</h5>
               <div className="d-grid gap-2">
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between">
-                  <span>Add New Menu Item</span>
+                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Add New Menu Item</span>
                   <i className="bi bi-plus-lg"></i>
                 </Button>
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between">
-                  <span>Manage Tables</span>
+                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Manage Tables</span>
                   <i className="bi bi-grid-3x3"></i>
                 </Button>
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between">
-                  <span>View Reports</span>
+                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>View Reports</span>
                   <i className="bi bi-graph-up"></i>
                 </Button>
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between">
-                  <span>Staff Schedule</span>
+                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Staff Schedule</span>
                   <i className="bi bi-calendar3"></i>
                 </Button>
               </div>

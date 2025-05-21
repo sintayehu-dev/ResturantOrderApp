@@ -204,7 +204,7 @@ const MenuList = () => {
                               variant="outline-primary"
                               size="sm"
                               onClick={() => handleShowModal(menu)}
-                            className="action-icon-btn"
+                              className="action-icon-btn edit-btn"
                             >
                               <i className="bi bi-pencil"></i>
                             </Button>
@@ -212,7 +212,7 @@ const MenuList = () => {
                               variant="outline-danger"
                               size="sm"
                               onClick={() => handleDelete(menu.menu_id)}
-                            className="action-icon-btn"
+                              className="action-icon-btn delete-btn"
                             >
                               <i className="bi bi-trash"></i>
                             </Button>
@@ -317,10 +317,12 @@ const MenuList = () => {
             </Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal} className="cancel-button">
+            <Button variant="outline-secondary" onClick={handleCloseModal} className="cancel-button d-flex align-items-center">
+              <i className="bi bi-x-circle me-2"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" className="submit-button">
+            <Button variant="primary" type="submit" className="submit-button d-flex align-items-center">
+              <i className={`bi ${selectedMenu ? 'bi-check2-circle' : 'bi-plus-circle'} me-2`}></i>
               {selectedMenu ? 'Update Menu' : 'Create Menu'}
             </Button>
           </Modal.Footer>
