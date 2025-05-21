@@ -1,0 +1,86 @@
+/* Font family and base styles matching the dashboard in the image */
+.menu-list-container {
+  font-family: 'Inter', 'Poppins', 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  color: #333;
+}
+
+/* Page title styling */
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: -0.02em;
+}
+
+/* Table styles */
+.menu-table {
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.menu-table thead {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #555;
+}
+
+.menu-item-text {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Badge styling */
+.category-badge, .status-badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 0.35em 0.65em;
+}
+
+/* Button styling */
+.action-button {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.action-icon-btn {
+  font-size: 0.8rem;
+}
+
+.menu-link {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4361ee;
+}
+
+/* Modal styling */
+.menu-modal .modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-input, .form-select {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.form-error {
+  font-size: 0.85rem;
+}
+
+.cancel-button, .submit-button {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+} 
