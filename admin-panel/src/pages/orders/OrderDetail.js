@@ -4,6 +4,7 @@ import { Container, Card, Button, Alert, Row, Col, Modal, Form, Table, Badge } f
 import { useOrder } from '../../contexts/OrderContext';
 import { useAuth } from '../../contexts/AuthContext';
 import './OrderList.css';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
 
 const OrderDetail = () => {
   const { orderId } = useParams();
@@ -139,6 +140,9 @@ const OrderDetail = () => {
     );
   }
 
+  // Always use an array for order items
+  const orderItems = order.order_items || [];
+
   return (
     <Container fluid className="p-3 p-md-4 order-list-container fade-in">
       <div className="d-flex justify-content-between align-items-center mb-4 detail-header">
@@ -228,51 +232,15 @@ const OrderDetail = () => {
                   </div>
                 </div>
               </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={8}>
-          <Card className="detail-card h-100 shadow-sm">
-            <Card.Body className="p-3 p-md-4">
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <h5 className="card-title mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Order Items</h5>
-              </div>
-              
-              {order.order_items && order.order_items.length > 0 ? (
-                <div className="table-responsive">
-                  <Table hover className="order-items-table">
-                    <thead>
-                      <tr>
-                        <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Item</th>
-                        <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Unit Price</th>
-                        <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Quantity</th>
-                        <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Subtotal</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {order.order_items.map((item, index) => (
-                        <tr key={index}>
-                          <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{item.food_name || item.food_id}</td>
-                          <td className="item-price" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{formatPrice(item.unit_price)}</td>
-                          <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{item.quantity}</td>
-                          <td className="item-price" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{formatPrice(item.unit_price * item.quantity)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <td colSpan="3" className="text-end fw-bold" style={{ fontSize: '78.75%' }}>Total:</td>
-                        <td className="fw-bold order-total" style={{ fontSize: '78.75%' }}>{formatPrice(order.order_total)}</td>
-                      </tr>
-                    </tfoot>
-                  </Table>
-                </div>
-              ) : (
-                <div className="text-center py-4 text-muted">
-                  <i className="bi bi-cart fs-3 mb-3"></i>
-                  <p style={{ fontSize: '78.75%' }}>No items in this order</p>
-                </div>
-              )}
+              <Button
+                variant="primary"
+                className="mt-3 w-100"
+                onClick={() => navigate('/order-items')}
+                style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+              >
+                <i className="bi bi-list-ul me-2"></i>
+                View Order Items
+              </Button>
             </Card.Body>
           </Card>
         </Col>
@@ -332,35 +300,15 @@ const OrderDetail = () => {
       </Modal>
 
       {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Delete Order</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p style={{ fontSize: '78.75%', fontWeight: 'normal' }}>Are you sure you want to delete order <strong>{order.order_id}</strong>?</p>
-          <p className="text-danger" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>This action cannot be undone.</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button 
-            variant="outline-secondary" 
-            onClick={() => setShowDeleteModal(false)}
-            className="d-flex align-items-center gap-2"
-            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
-          >
-            <i className="bi bi-x-circle"></i>
-            Cancel
-          </Button>
-          <Button 
-            variant="danger" 
-            onClick={handleDelete}
-            className="d-flex align-items-center gap-2"
-            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
-          >
-            <i className="bi bi-trash"></i>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ConfirmDialog
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        title="Delete Order"
+        message={`Are you sure you want to delete order ${order.order_id}? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
     </Container>
   );
 };

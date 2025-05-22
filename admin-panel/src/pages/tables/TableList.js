@@ -4,6 +4,7 @@ import { useTable } from '../../contexts/TableContext';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import './TableList.css';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
 
 const TableList = () => {
   const { tables, loading, error, fetchTables, createTable, updateTable, deleteTable, getNextTableId } = useTable();
@@ -14,6 +15,8 @@ const TableList = () => {
     table_name: '',
   });
   const [formError, setFormError] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [tableToDelete, setTableToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -84,14 +87,26 @@ const TableList = () => {
     }
   };
 
-  const handleDelete = async (tableId) => {
-    if (window.confirm('Are you sure you want to delete this table?')) {
+  const handleDelete = (tableId) => {
+    setTableToDelete(tableId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (tableToDelete) {
       try {
-        await deleteTable(tableId);
+        await deleteTable(tableToDelete);
       } catch (err) {
         console.error('Error deleting table:', err);
       }
     }
+    setShowDeleteModal(false);
+    setTableToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setTableToDelete(null);
   };
 
   if (loading) {
@@ -117,8 +132,8 @@ const TableList = () => {
   return (
     <Container fluid className="p-4 table-list-container">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h3 mb-0 page-title">Table Management</h1>
-        <Button variant="primary" onClick={() => handleShowModal()} className="action-button">
+        <h1 className="h3 mb-0 page-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Table Management</h1>
+        <Button variant="primary" onClick={() => handleShowModal()} className="action-button" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>
           <i className="bi bi-plus-lg me-2"></i>
           Add New Table
         </Button>
@@ -130,11 +145,11 @@ const TableList = () => {
             <Table hover className="align-middle menu-table">
               <thead>
                 <tr>
-                  <th>Table ID</th>
-                  <th>Name</th>
-                  <th>Created At</th>
-                  <th>Updated At</th>
-                  <th>Actions</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Table ID</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Name</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Created At</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Updated At</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -159,6 +174,7 @@ const TableList = () => {
                           size="sm"
                           onClick={() => handleShowModal(table)}
                           className="action-icon-btn edit-btn"
+                          style={{ fontSize: '78.75%' }}
                         >
                           <i className="bi bi-pencil"></i>
                         </Button>
@@ -167,6 +183,7 @@ const TableList = () => {
                           size="sm"
                           onClick={() => handleDelete(table.table_id)}
                           className="action-icon-btn delete-btn"
+                          style={{ fontSize: '78.75%' }}
                         >
                           <i className="bi bi-trash"></i>
                         </Button>
@@ -183,20 +200,20 @@ const TableList = () => {
       {/* Add/Edit Table Modal */}
       <Modal show={showModal} onHide={handleCloseModal} centered className="table-modal">
         <Modal.Header closeButton>
-          <Modal.Title className="modal-title">
+          <Modal.Title className="modal-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
             {selectedTable ? 'Edit Table' : 'Add New Table'}
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             {formError && (
-              <Alert variant="danger" className="mb-3">
+              <Alert variant="danger" className="mb-3" style={{ fontSize: '78.75%' }}>
                 {formError}
               </Alert>
             )}
 
             <Form.Group className="mb-3">
-              <Form.Label>Table ID</Form.Label>
+              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Table ID</Form.Label>
               <Form.Control
                 type="text"
                 name="table_id"
@@ -205,11 +222,12 @@ const TableList = () => {
                 required
                 placeholder="Enter table ID"
                 disabled={!!selectedTable}
+                style={{ fontSize: '78.75%' }}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Table Name</Form.Label>
+              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Table Name</Form.Label>
               <Form.Control
                 type="text"
                 name="table_name"
@@ -217,21 +235,33 @@ const TableList = () => {
                 onChange={handleInputChange}
                 required
                 placeholder="Enter table name"
+                style={{ fontSize: '78.75%' }}
               />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-secondary" onClick={handleCloseModal} className="cancel-button d-flex align-items-center">
+            <Button variant="outline-secondary" onClick={handleCloseModal} className="cancel-button d-flex align-items-center" style={{ fontSize: '78.75%' }}>
               <i className="bi bi-x-circle me-2"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" className="submit-button d-flex align-items-center">
+            <Button variant="primary" type="submit" className="submit-button d-flex align-items-center" style={{ fontSize: '78.75%' }}>
               <i className={`bi ${selectedTable ? 'bi-check2-circle' : 'bi-plus-circle'} me-2`}></i>
               {selectedTable ? 'Update Table' : 'Create Table'}
             </Button>
           </Modal.Footer>
         </Form>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDialog
+        show={showDeleteModal}
+        onHide={cancelDelete}
+        onConfirm={confirmDelete}
+        title="Delete Table"
+        message="Are you sure you want to delete this table?"
+        confirmText="Yes"
+        cancelText="No"
+      />
     </Container>
   );
 };

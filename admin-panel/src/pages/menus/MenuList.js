@@ -4,6 +4,7 @@ import { useMenu } from '../../contexts/MenuContext';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import './MenuList.css';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
 
 const MenuList = () => {
   const { menus, categories, loading, error, fetchMenus, fetchCategories, createMenu, updateMenu, deleteMenu } = useMenu();
@@ -18,6 +19,8 @@ const MenuList = () => {
   });
   const [formError, setFormError] = useState('');
   const navigate = useNavigate();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [menuToDelete, setMenuToDelete] = useState(null);
 
   useEffect(() => {
     fetchMenus();
@@ -112,14 +115,26 @@ const MenuList = () => {
     }
   };
 
-  const handleDelete = async (menuId) => {
-    if (window.confirm('Are you sure you want to delete this menu?')) {
+  const handleDelete = (menuId) => {
+    setMenuToDelete(menuId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (menuToDelete) {
       try {
-        await deleteMenu(menuId);
+        await deleteMenu(menuToDelete);
       } catch (err) {
         console.error('Error deleting menu:', err);
       }
     }
+    setShowDeleteModal(false);
+    setMenuToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setMenuToDelete(null);
   };
 
   if (loading) {
@@ -145,8 +160,8 @@ const MenuList = () => {
   return (
     <Container fluid className="p-4 menu-list-container">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h3 mb-0 page-title">Menu Management</h1>
-        <Button variant="primary" onClick={() => handleShowModal()} className="action-button">
+        <h1 className="h3 mb-0 page-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Menu Management</h1>
+        <Button variant="primary" onClick={() => handleShowModal()} className="action-button" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>
             <i className="bi bi-plus-lg me-2"></i>
             Add New Menu
           </Button>
@@ -158,13 +173,13 @@ const MenuList = () => {
             <Table hover className="align-middle menu-table">
               <thead>
                 <tr>
-                  <th>Menu ID</th>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Menu ID</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Name</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Category</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Start Date</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>End Date</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Status</th>
+                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -205,6 +220,7 @@ const MenuList = () => {
                               size="sm"
                               onClick={() => handleShowModal(menu)}
                               className="action-icon-btn edit-btn"
+                              style={{ fontSize: '78.75%' }}
                             >
                               <i className="bi bi-pencil"></i>
                             </Button>
@@ -213,6 +229,7 @@ const MenuList = () => {
                               size="sm"
                               onClick={() => handleDelete(menu.menu_id)}
                               className="action-icon-btn delete-btn"
+                              style={{ fontSize: '78.75%' }}
                             >
                               <i className="bi bi-trash"></i>
                             </Button>
@@ -230,20 +247,20 @@ const MenuList = () => {
       {/* Add/Edit Menu Modal */}
       <Modal show={showModal} onHide={handleCloseModal} centered className="menu-modal">
         <Modal.Header closeButton>
-          <Modal.Title className="modal-title">
+          <Modal.Title className="modal-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
             {selectedMenu ? 'Edit Menu' : 'Add New Menu'}
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             {formError && (
-              <Alert variant="danger" className="mb-3 form-error">
+              <Alert variant="danger" className="mb-3 form-error" style={{ fontSize: '78.75%' }}>
                 {formError}
               </Alert>
             )}
 
             <Form.Group className="mb-3">
-              <Form.Label className="form-label">Menu ID</Form.Label>
+              <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>Menu ID</Form.Label>
               <Form.Control
                 type="text"
                 name="menu_id"
@@ -253,11 +270,12 @@ const MenuList = () => {
                 placeholder="Enter menu ID"
                 className="form-input"
                 disabled={!!selectedMenu}
+                style={{ fontSize: '78.75%' }}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label className="form-label">Menu Name</Form.Label>
+              <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>Menu Name</Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -266,17 +284,19 @@ const MenuList = () => {
                 required
                 placeholder="Enter menu name"
                 className="form-input"
+                style={{ fontSize: '78.75%' }}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label className="form-label">Category</Form.Label>
+              <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>Category</Form.Label>
               <Form.Select
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
                 required
                 className="form-select"
+                style={{ fontSize: '78.75%' }}
               >
                 <option value="">Select a category</option>
                 {categories.map((category) => (
@@ -290,7 +310,7 @@ const MenuList = () => {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label className="form-label">Start Date</Form.Label>
+                  <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>Start Date</Form.Label>
                   <Form.Control
                     type="datetime-local"
                     name="start_date"
@@ -298,12 +318,13 @@ const MenuList = () => {
                     onChange={handleInputChange}
                     required
                     className="form-input"
+                    style={{ fontSize: '78.75%' }}
                   />
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label className="form-label">End Date</Form.Label>
+                  <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>End Date</Form.Label>
                   <Form.Control
                     type="datetime-local"
                     name="end_date"
@@ -311,23 +332,35 @@ const MenuList = () => {
                     onChange={handleInputChange}
                     required
                     className="form-input"
+                    style={{ fontSize: '78.75%' }}
                   />
                 </Form.Group>
               </Col>
             </Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-secondary" onClick={handleCloseModal} className="cancel-button d-flex align-items-center">
+            <Button variant="outline-secondary" onClick={handleCloseModal} className="cancel-button d-flex align-items-center" style={{ fontSize: '78.75%' }}>
               <i className="bi bi-x-circle me-2"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" className="submit-button d-flex align-items-center">
+            <Button variant="primary" type="submit" className="submit-button d-flex align-items-center" style={{ fontSize: '78.75%' }}>
               <i className={`bi ${selectedMenu ? 'bi-check2-circle' : 'bi-plus-circle'} me-2`}></i>
               {selectedMenu ? 'Update Menu' : 'Create Menu'}
             </Button>
           </Modal.Footer>
         </Form>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDialog
+        show={showDeleteModal}
+        onHide={cancelDelete}
+        onConfirm={confirmDelete}
+        title="Delete Menu"
+        message="Are you sure you want to delete this menu?"
+        confirmText="Yes"
+        cancelText="No"
+      />
     </Container>
   );
 };

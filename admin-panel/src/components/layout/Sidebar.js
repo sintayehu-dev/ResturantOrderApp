@@ -48,6 +48,11 @@ const Sidebar = ({ isMobile, show, onHide }) => {
       icon: 'bi bi-cart'
     },
     {
+      title: 'Order Items',
+      path: '/order-items',
+      icon: 'bi bi-box-seam'
+    },
+    {
       title: 'Invoices',
       path: '/invoices',
       icon: 'bi bi-receipt'

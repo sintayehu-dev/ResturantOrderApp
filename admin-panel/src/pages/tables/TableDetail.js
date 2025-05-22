@@ -113,39 +113,40 @@ const TableDetail = () => {
             variant="link"
             className="text-decoration-none p-0 mb-2"
             onClick={() => navigate('/tables')}
+            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
           >
             <i className="bi bi-arrow-left me-2"></i>
             Back to Tables
           </Button>
-          <h1 className="h3 mb-0 detail-title">{table.table_name}</h1>
+          <h1 className="h3 mb-0 detail-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>{table.table_name}</h1>
         </div>
-        {isAdmin && (
-          <div className="d-flex gap-2">
-            <Button
-              variant="outline-primary"
-              onClick={() => setShowEditModal(true)}
-              className="d-flex align-items-center"
-            >
-              <i className="bi bi-pencil me-2"></i>
-              Edit Table
-            </Button>
-            <Button
-              variant="outline-danger"
-              onClick={() => setShowDeleteModal(true)}
-              className="d-flex align-items-center"
-            >
-              <i className="bi bi-trash me-2"></i>
-              Delete Table
-            </Button>
-          </div>
-        )}
+        <div className="d-flex gap-2">
+          <Button
+            variant="outline-primary"
+            onClick={() => setShowEditModal(true)}
+            className="d-flex align-items-center"
+            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+          >
+            <i className="bi bi-pencil me-2"></i>
+            Edit Table
+          </Button>
+          <Button
+            variant="outline-danger"
+            onClick={() => setShowDeleteModal(true)}
+            className="d-flex align-items-center"
+            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+          >
+            <i className="bi bi-trash me-2"></i>
+            Delete Table
+          </Button>
+        </div>
       </div>
 
       <Row>
         <Col md={12}>
           <Card className="detail-card">
             <Card.Body>
-              <h5 className="card-title mb-4">Table Details</h5>
+              <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Table Details</h5>
               <div className="row g-3">
                 <div className="col-sm-6">
                   <div className="d-flex align-items-center">
@@ -153,8 +154,8 @@ const TableDetail = () => {
                       <i className="bi bi-grid-3x3 text-primary"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Table ID</small>
-                      <span className="fw-medium">{table.table_id}</span>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Table ID</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{table.table_id}</span>
                     </div>
                   </div>
                 </div>
@@ -164,8 +165,8 @@ const TableDetail = () => {
                       <i className="bi bi-card-text text-success"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Table Name</small>
-                      <span className="fw-medium">{table.table_name}</span>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Table Name</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{table.table_name}</span>
                     </div>
                   </div>
                 </div>
@@ -175,8 +176,8 @@ const TableDetail = () => {
                       <i className="bi bi-calendar-plus text-info"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Created At</small>
-                      <span className="fw-medium">
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Created At</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
                         {new Date(table.created_at).toLocaleString()}
                       </span>
                     </div>
@@ -188,8 +189,8 @@ const TableDetail = () => {
                       <i className="bi bi-clock-history text-primary"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Last Updated</small>
-                      <span className="fw-medium">
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Last Updated</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
                         {new Date(table.updated_at).toLocaleString()}
                       </span>
                     </div>
@@ -204,33 +205,34 @@ const TableDetail = () => {
       {/* Edit Table Modal */}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Table</Modal.Title>
+          <Modal.Title style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Edit Table</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             {formError && (
-              <Alert variant="danger" className="mb-3">
+              <Alert variant="danger" className="mb-3" style={{ fontSize: '78.75%' }}>
                 {formError}
               </Alert>
             )}
 
             <Form.Group className="mb-3">
-              <Form.Label>Table Name</Form.Label>
+              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Table Name</Form.Label>
               <Form.Control
                 type="text"
                 name="table_name"
                 value={formData.table_name}
                 onChange={handleInputChange}
                 required
+                style={{ fontSize: '78.75%' }}
               />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-secondary" onClick={() => setShowEditModal(false)} className="d-flex align-items-center">
+            <Button variant="outline-secondary" onClick={() => setShowEditModal(false)} className="d-flex align-items-center" style={{ fontSize: '78.75%' }}>
               <i className="bi bi-x-circle me-2"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" className="d-flex align-items-center">
+            <Button variant="primary" type="submit" className="d-flex align-items-center" style={{ fontSize: '78.75%' }}>
               <i className="bi bi-check2-circle me-2"></i>
               Save Changes
             </Button>
@@ -241,17 +243,17 @@ const TableDetail = () => {
       {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Delete Table</Modal.Title>
+          <Modal.Title style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Delete Table</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Are you sure you want to delete <strong>{table.table_name}</strong>?</p>
-          <p className="text-danger">This action cannot be undone.</p>
+          <p style={{ fontSize: '78.75%' }}>Are you sure you want to delete <strong>{table.table_name}</strong>?</p>
+          <p className="text-danger" style={{ fontSize: '78.75%' }}>This action cannot be undone.</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-secondary" onClick={() => setShowDeleteModal(false)}>
+          <Button variant="outline-secondary" onClick={() => setShowDeleteModal(false)} style={{ fontSize: '78.75%' }}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button variant="danger" onClick={handleDelete} style={{ fontSize: '78.75%' }}>
             Delete
           </Button>
         </Modal.Footer>

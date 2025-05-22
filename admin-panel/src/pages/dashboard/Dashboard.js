@@ -201,13 +201,13 @@ const Dashboard = () => {
                   </thead>
                   <tbody>
                     {loading ? (
-                      <tr>
+                    <tr>
                         <td colSpan="5" className="text-center">
                           <div className="spinner-border spinner-border-sm text-primary" role="status">
                             <span className="visually-hidden">Loading...</span>
                           </div>
                         </td>
-                      </tr>
+                    </tr>
                     ) : recentOrders.length > 0 ? (
                       recentOrders.map((order) => (
                         <tr key={order.order_id} style={{cursor: 'pointer'}} onClick={() => navigate(`/orders/${order.order_id}`)}>
@@ -220,14 +220,14 @@ const Dashboard = () => {
                               {order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1)}
                             </span>
                           </td>
-                        </tr>
+                    </tr>
                       ))
                     ) : (
-                      <tr>
+                    <tr>
                         <td colSpan="5" className="text-center py-3" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>
                           No recent orders found
                         </td>
-                      </tr>
+                    </tr>
                     )}
                   </tbody>
                 </table>

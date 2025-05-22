@@ -55,22 +55,39 @@ tableApi.interceptors.response.use(
   }
 );
 
-const tableService = {
-  // Get all available tables (uses the /available-tables endpoint)
-  getAllTables: async () => {
-    try {
-      const response = await axios.get(`${cleanBaseUrl}/available-tables`, {
-        headers: {
-          'Authorization': getAuthToken(),
-          'Content-Type': 'application/json',
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error.message;
-    }
-  },
+// Get all tables (for admin management and ID generation)
+const getAllTables = async () => {
+  try {
+    const response = await axios.get(`${cleanBaseUrl}/tables`, {
+      headers: {
+        'Authorization': getAuthToken(),
+        'Content-Type': 'application/json',
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
 
+// Get available tables (for assigning to new orders)
+const getAvailableTables = async () => {
+  try {
+    const response = await axios.get(`${cleanBaseUrl}/available-tables`, {
+      headers: {
+        'Authorization': getAuthToken(),
+        'Content-Type': 'application/json',
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+const tableService = {
+  getAllTables,
+  getAvailableTables,
   // Get table by ID (uses the /tables/:table_id endpoint)
   getTableById: async (tableId) => {
     try {
@@ -111,27 +128,23 @@ const tableService = {
     }
   },
   
-  // Get next table ID
+  // Get next table ID (uses all tables, not just available)
   getNextTableId: async () => {
     try {
-      // We use the getAllTables method which gets available tables
-      const tables = await tableService.getAllTables();
+      const tables = await getAllTables();
       if (!tables || tables.length === 0) return 'table-001';
-      
-      // Extract numbers from table_id like "table-004"
       const numbers = tables
         .map(table => {
           const match = table.table_id && table.table_id.match(/^table-(\d+)$/);
           return match ? parseInt(match[1], 10) : null;
         })
         .filter(num => num !== null);
-      
       const max = numbers.length ? Math.max(...numbers) : 0;
       const next = (max + 1).toString().padStart(3, '0');
       return `table-${next}`;
     } catch (error) {
       console.error('Error getting next table ID:', error);
-      return 'table-001'; // Default fallback
+      return 'table-001';
     }
   }
 };

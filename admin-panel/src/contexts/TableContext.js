@@ -65,6 +65,7 @@ export const TableProvider = ({ children }) => {
     try {
       const data = await tableService.createTable(tableData);
       setTables(prevTables => [...prevTables, data]);
+      await fetchTables();
       return data;
     } catch (err) {
       console.error('Error creating table:', err);
@@ -73,7 +74,7 @@ export const TableProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchTables]);
 
   // Update table
   const updateTable = useCallback(async (tableId, tableData) => {

@@ -161,30 +161,31 @@ const FoodDetail = () => {
             variant="link"
             className="text-decoration-none p-0 mb-2"
             onClick={() => navigate('/foods')}
+            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
           >
             <i className="bi bi-arrow-left me-2"></i>
             Back to Foods
           </Button>
-          <h1 className="h3 mb-0">{food.name}</h1>
+          <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>{food.name}</h1>
         </div>
-        {isAdmin && (
-          <div className="d-flex gap-2">
-            <Button
-              variant="outline-primary"
-              onClick={() => setShowEditModal(true)}
-            >
-              <i className="bi bi-pencil me-2"></i>
-              Edit Food
-            </Button>
-            <Button
-              variant="outline-danger"
-              onClick={() => setShowDeleteModal(true)}
-            >
-              <i className="bi bi-trash me-2"></i>
-              Delete Food
-            </Button>
-          </div>
-        )}
+        <div className="d-flex gap-2">
+          <Button
+            variant="outline-primary"
+            onClick={() => setShowEditModal(true)}
+            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+          >
+            <i className="bi bi-pencil me-2"></i>
+            Edit Food
+          </Button>
+          <Button
+            variant="outline-danger"
+            onClick={() => setShowDeleteModal(true)}
+            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+          >
+            <i className="bi bi-trash me-2"></i>
+            Delete Food
+          </Button>
+        </div>
       </div>
 
       <Row>
@@ -201,7 +202,7 @@ const FoodDetail = () => {
         <Col md={8}>
           <Card className="h-100">
             <Card.Body>
-              <h5 className="card-title mb-4">Food Details</h5>
+              <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Food Details</h5>
               <div className="row g-3">
                 <div className="col-sm-6">
                   <div className="d-flex align-items-center">
@@ -209,8 +210,8 @@ const FoodDetail = () => {
                       <i className="bi bi-tag text-primary"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Food ID</small>
-                      <span className="fw-medium">{food.food_id}</span>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Food ID</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{food.food_id}</span>
                     </div>
                   </div>
                 </div>
@@ -220,8 +221,8 @@ const FoodDetail = () => {
                       <i className="bi bi-currency-dollar text-success"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Price</small>
-                      <span className="fw-medium">{formatPrice(food.price)}</span>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Price</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{formatPrice(food.price)}</span>
                     </div>
                   </div>
                 </div>
@@ -231,13 +232,13 @@ const FoodDetail = () => {
                       <i className="bi bi-menu-button-wide text-info"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Menu</small>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Menu</small>
                       {menuItem ? (
-                        <Badge bg="info" className="text-capitalize">
+                        <Badge bg="info" className="text-capitalize" style={{ fontSize: '78.75%' }}>
                           {menuItem.name}
                         </Badge>
                       ) : (
-                        <Badge bg="secondary">No Menu</Badge>
+                        <Badge bg="secondary" style={{ fontSize: '78.75%' }}>No Menu</Badge>
                       )}
                     </div>
                   </div>
@@ -248,8 +249,8 @@ const FoodDetail = () => {
                       <i className="bi bi-clock-history text-primary"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Last Updated</small>
-                      <span className="fw-medium">
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Last Updated</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
                         {new Date(food.updated_at).toLocaleString()}
                       </span>
                     </div>
@@ -264,29 +265,30 @@ const FoodDetail = () => {
       {/* Edit Food Modal */}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Food Item</Modal.Title>
+          <Modal.Title style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Edit Food Item</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             {formError && (
-              <Alert variant="danger" className="mb-3">
+              <Alert variant="danger" className="mb-3" style={{ fontSize: '78.75%' }}>
                 {formError}
               </Alert>
             )}
 
             <Form.Group className="mb-3">
-              <Form.Label>Food Name</Form.Label>
+              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Food Name</Form.Label>
               <Form.Control
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
                 required
+                style={{ fontSize: '78.75%' }}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Price</Form.Label>
+              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Price</Form.Label>
               <InputGroup>
                 <InputGroup.Text>$</InputGroup.Text>
                 <Form.Control
@@ -297,31 +299,34 @@ const FoodDetail = () => {
                   value={formData.price}
                   onChange={handleInputChange}
                   required
+                  style={{ fontSize: '78.75%' }}
                 />
               </InputGroup>
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Image URL</Form.Label>
+              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Image URL</Form.Label>
               <Form.Control
                 type="text"
                 name="food_image"
                 value={formData.food_image}
                 onChange={handleInputChange}
                 placeholder="Enter image path or URL"
+                style={{ fontSize: '78.75%' }}
               />
-              <Form.Text className="text-muted">
+              <Form.Text className="text-muted" style={{ fontSize: '75%' }}>
                 Example: /images/foods/pizza.jpg
               </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Menu</Form.Label>
+              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Menu</Form.Label>
               <Form.Select
                 name="menu_id"
                 value={formData.menu_id}
                 onChange={handleInputChange}
                 required
+                style={{ fontSize: '78.75%' }}
               >
                 <option value="">Select a menu</option>
                 {menus.map((menu) => (
@@ -333,11 +338,11 @@ const FoodDetail = () => {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-secondary" onClick={() => setShowEditModal(false)} className="d-flex align-items-center">
+            <Button variant="outline-secondary" onClick={() => setShowEditModal(false)} className="d-flex align-items-center" style={{ fontSize: '78.75%' }}>
               <i className="bi bi-x-circle me-2"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" className="d-flex align-items-center">
+            <Button variant="primary" type="submit" className="d-flex align-items-center" style={{ fontSize: '78.75%' }}>
               <i className="bi bi-check2-circle me-2"></i>
               Save Changes
             </Button>
@@ -348,17 +353,17 @@ const FoodDetail = () => {
       {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Delete Food Item</Modal.Title>
+          <Modal.Title style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Delete Food Item</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Are you sure you want to delete <strong>{food.name}</strong>?</p>
-          <p className="text-danger">This action cannot be undone.</p>
+          <p style={{ fontSize: '78.75%' }}>Are you sure you want to delete <strong>{food.name}</strong>?</p>
+          <p className="text-danger" style={{ fontSize: '78.75%' }}>This action cannot be undone.</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-secondary" onClick={() => setShowDeleteModal(false)}>
+          <Button variant="outline-secondary" onClick={() => setShowDeleteModal(false)} style={{ fontSize: '78.75%' }}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button variant="danger" onClick={handleDelete} style={{ fontSize: '78.75%' }}>
             Delete
           </Button>
         </Modal.Footer>

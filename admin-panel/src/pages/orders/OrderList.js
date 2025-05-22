@@ -5,6 +5,7 @@ import { useTable } from '../../contexts/TableContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import './OrderList.css';
+import ConfirmDialog from '../../components/common/ConfirmDialog';
 
 const OrderList = () => {
   const { orders, loading, error, fetchOrders, createOrder, deleteOrder, getNextOrderId } = useOrder();
@@ -20,6 +21,8 @@ const OrderList = () => {
   const [formError, setFormError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -101,14 +104,26 @@ const OrderList = () => {
     }
   };
 
-  const handleDelete = async (orderId) => {
-    if (window.confirm('Are you sure you want to delete this order?')) {
+  const handleDelete = (orderId) => {
+    setOrderToDelete(orderId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (orderToDelete) {
       try {
-        await deleteOrder(orderId);
+        await deleteOrder(orderToDelete);
       } catch (err) {
         console.error('Error deleting order:', err);
       }
     }
+    setShowDeleteModal(false);
+    setOrderToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setOrderToDelete(null);
   };
 
   const getStatusBadge = (status) => {
@@ -227,8 +242,7 @@ const OrderList = () => {
                           variant="outline-primary"
                           size="sm"
                           onClick={() => navigate(`/orders/${order.order_id}`)}
-                          className="d-flex align-items-center justify-content-center"
-                          style={{ width: '32px', height: '32px', borderRadius: '4px' }}
+                          className="action-icon-btn edit-btn"
                         >
                           <i className="bi bi-eye"></i>
                         </Button>
@@ -236,8 +250,7 @@ const OrderList = () => {
                           variant="outline-danger"
                           size="sm"
                           onClick={() => handleDelete(order.order_id)}
-                          className="d-flex align-items-center justify-content-center"
-                          style={{ width: '32px', height: '32px', borderRadius: '4px' }}
+                          className="action-icon-btn delete-btn"
                         >
                           <i className="bi bi-trash"></i>
                         </Button>
@@ -350,6 +363,17 @@ const OrderList = () => {
           </Modal.Footer>
         </Form>
       </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDialog
+        show={showDeleteModal}
+        onHide={cancelDelete}
+        onConfirm={confirmDelete}
+        title="Delete Order"
+        message="Are you sure you want to delete this order?"
+        confirmText="Yes"
+        cancelText="No"
+      />
     </Container>
   );
 };
