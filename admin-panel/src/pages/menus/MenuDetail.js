@@ -127,23 +127,30 @@ const MenuDetail = () => {
             <i className="bi bi-arrow-left me-2"></i>
             Back to Menus
           </Button>
-          <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>{menu.name}</h1>
+          <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+            {menu.name}
+            <Badge bg={isActive ? 'success' : 'secondary'} className="ms-2" style={{ fontSize: '65%', verticalAlign: 'middle' }}>
+              {isActive ? 'Active' : 'Inactive'}
+            </Badge>
+          </h1>
         </div>
         <div className="d-flex gap-2">
           <Button
             variant="outline-primary"
             onClick={() => setShowEditModal(true)}
+            className="d-flex align-items-center gap-2"
             style={{ fontSize: '78.75%', fontWeight: 'bold' }}
           >
-            <i className="bi bi-pencil me-2"></i>
+            <i className="bi bi-pencil"></i>
             Edit Menu
           </Button>
           <Button
             variant="outline-danger"
             onClick={() => setShowDeleteModal(true)}
+            className="d-flex align-items-center gap-2"
             style={{ fontSize: '78.75%', fontWeight: 'bold' }}
           >
-            <i className="bi bi-trash me-2"></i>
+            <i className="bi bi-trash"></i>
             Delete Menu
           </Button>
         </div>
@@ -151,105 +158,83 @@ const MenuDetail = () => {
 
       <Row>
         <Col lg={8}>
-          <Card className="h-100">
+          <Card className="mb-4 shadow-sm">
             <Card.Body>
-              <div className="mb-4">
-                <h5 className="card-title mb-3" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Menu Details</h5>
-                <div className="row g-3">
-                  <div className="col-sm-6">
-                    <div className="d-flex align-items-center">
-                      <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                        <i className="bi bi-tag text-primary"></i>
-                      </div>
-                      <div>
-                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Menu ID</small>
-                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>{menu.menu_id}</span>
-                      </div>
+              <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Menu Details</h5>
+              <div className="row g-3">
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-tag text-primary"></i>
                     </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="d-flex align-items-center">
-                      <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                        <i className="bi bi-grid text-primary"></i>
-                      </div>
-                      <div>
-                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Category</small>
-                        <Badge bg="info" className="text-capitalize" style={{ fontSize: '78.75%' }}>
-                          {menu.category}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="d-flex align-items-center">
-                      <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                        <i className="bi bi-calendar-check text-primary"></i>
-                      </div>
-                      <div>
-                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Start Date</small>
-                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>
-                          {format(new Date(menu.start_date), 'MMM dd, yyyy HH:mm')}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="d-flex align-items-center">
-                      <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                        <i className="bi bi-calendar-x text-primary"></i>
-                      </div>
-                      <div>
-                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>End Date</small>
-                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>
-                          {format(new Date(menu.end_date), 'MMM dd, yyyy HH:mm')}
-                        </span>
-                      </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Menu ID</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{menu.menu_id}</span>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="mb-4">
-                <h5 className="card-title mb-3" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Status Information</h5>
-                <div className="d-flex align-items-center">
-                  <Badge bg={isActive ? 'success' : 'secondary'} className="me-2">
-                    {isActive ? 'Active' : 'Inactive'}
-                  </Badge>
-                  <small className="text-muted">
-                    {isActive
-                      ? `Active until ${format(new Date(menu.end_date), 'MMM dd, yyyy')}`
-                      : `Ended on ${format(new Date(menu.end_date), 'MMM dd, yyyy')}`}
-                  </small>
-                </div>
-              </div>
-
-              <div>
-                <h5 className="card-title mb-3" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Additional Information</h5>
-                <div className="row g-3">
-                  <div className="col-sm-6">
-                    <div className="d-flex align-items-center">
-                      <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                        <i className="bi bi-clock-history text-primary"></i>
-                      </div>
-                      <div>
-                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Created At</small>
-                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>
-                          {format(new Date(menu.created_at), 'MMM dd, yyyy HH:mm')}
-                        </span>
-                      </div>
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-info bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-grid text-info"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Category</small>
+                      <Badge bg="info" className="text-capitalize" style={{ fontSize: '78.75%' }}>
+                        {menu.category}
+                      </Badge>
                     </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="d-flex align-items-center">
-                      <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                        <i className="bi bi-clock text-primary"></i>
-                      </div>
-                      <div>
-                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Last Updated</small>
-                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>
-                          {format(new Date(menu.updated_at), 'MMM dd, yyyy HH:mm')}
-                        </span>
-                      </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-success bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-calendar-check text-success"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Start Date</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                        {format(new Date(menu.start_date), 'MMM dd, yyyy HH:mm')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-danger bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-calendar-x text-danger"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>End Date</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                        {format(new Date(menu.end_date), 'MMM dd, yyyy HH:mm')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-clock-history text-primary"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Created At</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                        {format(new Date(menu.created_at), 'MMM dd, yyyy HH:mm')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-clock text-primary"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Last Updated</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                        {format(new Date(menu.updated_at), 'MMM dd, yyyy HH:mm')}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -259,28 +244,26 @@ const MenuDetail = () => {
         </Col>
 
         <Col lg={4}>
-          <Card className="h-100">
+          <Card className="shadow-sm">
             <Card.Body>
               <h5 className="card-title mb-3" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Quick Actions</h5>
               <div className="d-grid gap-2">
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between">
+                <Button 
+                  variant="outline-primary" 
+                  className="d-flex align-items-center justify-content-between"
+                  style={{ fontSize: '78.75%' }}
+                >
                   <span>View Menu Items</span>
                   <i className="bi bi-list-ul"></i>
                 </Button>
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between">
+                <Button 
+                  variant="outline-primary" 
+                  className="d-flex align-items-center justify-content-between"
+                  style={{ fontSize: '78.75%' }}
+                >
                   <span>Export Menu</span>
                   <i className="bi bi-download"></i>
                 </Button>
-                {isAdmin && (
-                  <Button 
-                    variant="outline-danger" 
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => setShowDeleteModal(true)}
-                  >
-                    <span>Delete Menu</span>
-                    <i className="bi bi-trash"></i>
-                  </Button>
-                )}
               </div>
             </Card.Body>
           </Card>
@@ -308,7 +291,6 @@ const MenuDetail = () => {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter menu name"
                 style={{ fontSize: '78.75%' }}
               />
             </Form.Group>
@@ -321,7 +303,6 @@ const MenuDetail = () => {
                 value={formData.category}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter menu category"
                 style={{ fontSize: '78.75%' }}
               />
             </Form.Group>
@@ -356,11 +337,23 @@ const MenuDetail = () => {
             </Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowEditModal(false)} style={{ fontSize: '78.75%' }}>
+            <Button 
+              variant="outline-secondary" 
+              onClick={() => setShowEditModal(false)}
+              className="d-flex align-items-center gap-2"
+              style={{ fontSize: '78.75%' }}
+            >
+              <i className="bi bi-x-circle"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" style={{ fontSize: '78.75%' }}>
-              Update Menu
+            <Button 
+              variant="primary" 
+              type="submit"
+              className="d-flex align-items-center gap-2"
+              style={{ fontSize: '78.75%' }}
+            >
+              <i className="bi bi-check2-circle"></i>
+              Save Changes
             </Button>
           </Modal.Footer>
         </Form>
@@ -372,14 +365,27 @@ const MenuDetail = () => {
           <Modal.Title style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Delete Menu</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p style={{ fontSize: '78.75%' }}>Are you sure you want to delete this menu? This action cannot be undone.</p>
+          <p style={{ fontSize: '78.75%' }}>Are you sure you want to delete <strong>{menu.name}</strong>?</p>
+          <p className="text-danger" style={{ fontSize: '78.75%' }}>This action cannot be undone.</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)} style={{ fontSize: '78.75%' }}>
+          <Button 
+            variant="outline-secondary" 
+            onClick={() => setShowDeleteModal(false)}
+            className="d-flex align-items-center gap-2"
+            style={{ fontSize: '78.75%' }}
+          >
+            <i className="bi bi-x-circle"></i>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDelete} style={{ fontSize: '78.75%' }}>
-            Delete Menu
+          <Button 
+            variant="danger" 
+            onClick={handleDelete}
+            className="d-flex align-items-center gap-2"
+            style={{ fontSize: '78.75%' }}
+          >
+            <i className="bi bi-trash"></i>
+            Delete
           </Button>
         </Modal.Footer>
       </Modal>

@@ -22,6 +22,9 @@ import OrderDetail from './pages/orders/OrderDetail';
 import { OrderItemProvider } from './contexts/OrderItemContext';
 import OrderItemList from './pages/orderItems/OrderItemList';
 import OrderItemDetail from './pages/orderItems/OrderItemDetail';
+import { InvoiceProvider } from './contexts/InvoiceContext';
+import InvoiceList from './pages/invoices/InvoiceList';
+import InvoiceDetail from './pages/invoices/InvoiceDetail';
 
 // Layout component for protected routes
 const DashboardLayout = () => (
@@ -44,27 +47,31 @@ function App() {
           <TableProvider>
             <OrderProvider>
               <OrderItemProvider>
-                <Router>
-                  <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-                      <Route index element={<Navigate to="/dashboard" replace />} />
-                      <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                      <Route path="menus" element={<ProtectedRoute><MenuList /></ProtectedRoute>} />
-                      <Route path="menus/:menuId" element={<ProtectedRoute><MenuDetail /></ProtectedRoute>} />
-                      <Route path="foods" element={<ProtectedRoute><FoodList /></ProtectedRoute>} />
-                      <Route path="foods/:foodId" element={<ProtectedRoute><FoodDetail /></ProtectedRoute>} />
-                      <Route path="tables" element={<ProtectedRoute><TableList /></ProtectedRoute>} />
-                      <Route path="tables/:tableId" element={<ProtectedRoute><TableDetail /></ProtectedRoute>} />
-                      <Route path="orders" element={<ProtectedRoute><OrderList /></ProtectedRoute>} />
-                      <Route path="orders/:orderId" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
-                      <Route path="order-items" element={<ProtectedRoute><OrderItemList /></ProtectedRoute>} />
-                      <Route path="order-items/:orderItemId" element={<ProtectedRoute><OrderItemDetail /></ProtectedRoute>} />
-                    </Route>
-                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
-                  </Routes>
-                </Router>
+                <InvoiceProvider>
+                  <Router>
+                    <Routes>
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/signup" element={<Signup />} />
+                      <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+                        <Route index element={<Navigate to="/dashboard" replace />} />
+                        <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                        <Route path="menus" element={<ProtectedRoute><MenuList /></ProtectedRoute>} />
+                        <Route path="menus/:menuId" element={<ProtectedRoute><MenuDetail /></ProtectedRoute>} />
+                        <Route path="foods" element={<ProtectedRoute><FoodList /></ProtectedRoute>} />
+                        <Route path="foods/:foodId" element={<ProtectedRoute><FoodDetail /></ProtectedRoute>} />
+                        <Route path="tables" element={<ProtectedRoute><TableList /></ProtectedRoute>} />
+                        <Route path="tables/:tableId" element={<ProtectedRoute><TableDetail /></ProtectedRoute>} />
+                        <Route path="orders" element={<ProtectedRoute><OrderList /></ProtectedRoute>} />
+                        <Route path="orders/:orderId" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
+                        <Route path="order-items" element={<ProtectedRoute><OrderItemList /></ProtectedRoute>} />
+                        <Route path="order-items/:orderItemId" element={<ProtectedRoute><OrderItemDetail /></ProtectedRoute>} />
+                        <Route path="invoices" element={<ProtectedRoute><InvoiceList /></ProtectedRoute>} />
+                        <Route path="invoices/:invoiceId" element={<ProtectedRoute><InvoiceDetail /></ProtectedRoute>} />
+                      </Route>
+                      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                    </Routes>
+                  </Router>
+                </InvoiceProvider>
               </OrderItemProvider>
             </OrderProvider>
           </TableProvider>

@@ -166,23 +166,27 @@ const FoodDetail = () => {
             <i className="bi bi-arrow-left me-2"></i>
             Back to Foods
           </Button>
-          <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>{food.name}</h1>
+          <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+            {food.name}
+          </h1>
         </div>
         <div className="d-flex gap-2">
           <Button
             variant="outline-primary"
             onClick={() => setShowEditModal(true)}
+            className="d-flex align-items-center gap-2"
             style={{ fontSize: '78.75%', fontWeight: 'bold' }}
           >
-            <i className="bi bi-pencil me-2"></i>
+            <i className="bi bi-pencil"></i>
             Edit Food
           </Button>
           <Button
             variant="outline-danger"
             onClick={() => setShowDeleteModal(true)}
+            className="d-flex align-items-center gap-2"
             style={{ fontSize: '78.75%', fontWeight: 'bold' }}
           >
-            <i className="bi bi-trash me-2"></i>
+            <i className="bi bi-trash"></i>
             Delete Food
           </Button>
         </div>
@@ -190,7 +194,7 @@ const FoodDetail = () => {
 
       <Row>
         <Col md={4}>
-          <Card className="mb-4">
+          <Card className="mb-4 shadow-sm">
             <Card.Img 
               variant="top" 
               src={food.food_image || '/images/foods/default.jpg'} 
@@ -200,7 +204,7 @@ const FoodDetail = () => {
           </Card>
         </Col>
         <Col md={8}>
-          <Card className="h-100">
+          <Card className="h-100 shadow-sm">
             <Card.Body>
               <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Food Details</h5>
               <div className="row g-3">
@@ -338,12 +342,22 @@ const FoodDetail = () => {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-secondary" onClick={() => setShowEditModal(false)} className="d-flex align-items-center" style={{ fontSize: '78.75%' }}>
-              <i className="bi bi-x-circle me-2"></i>
+            <Button 
+              variant="outline-secondary" 
+              onClick={() => setShowEditModal(false)} 
+              className="d-flex align-items-center gap-2"
+              style={{ fontSize: '78.75%' }}
+            >
+              <i className="bi bi-x-circle"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" className="d-flex align-items-center" style={{ fontSize: '78.75%' }}>
-              <i className="bi bi-check2-circle me-2"></i>
+            <Button 
+              variant="primary" 
+              type="submit"
+              className="d-flex align-items-center gap-2"
+              style={{ fontSize: '78.75%' }}
+            >
+              <i className="bi bi-check2-circle"></i>
               Save Changes
             </Button>
           </Modal.Footer>
@@ -360,10 +374,22 @@ const FoodDetail = () => {
           <p className="text-danger" style={{ fontSize: '78.75%' }}>This action cannot be undone.</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-secondary" onClick={() => setShowDeleteModal(false)} style={{ fontSize: '78.75%' }}>
+          <Button 
+            variant="outline-secondary" 
+            onClick={() => setShowDeleteModal(false)}
+            className="d-flex align-items-center gap-2"
+            style={{ fontSize: '78.75%' }}
+          >
+            <i className="bi bi-x-circle"></i>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDelete} style={{ fontSize: '78.75%' }}>
+          <Button 
+            variant="danger" 
+            onClick={handleDelete}
+            className="d-flex align-items-center gap-2"
+            style={{ fontSize: '78.75%' }}
+          >
+            <i className="bi bi-trash"></i>
             Delete
           </Button>
         </Modal.Footer>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Card, Button, Alert, Row, Col, Modal, Form, Table, Badge } from 'react-bootstrap';
+import { Container, Card, Button, Alert, Row, Col, Modal, Form, Badge } from 'react-bootstrap';
 import { useOrder } from '../../contexts/OrderContext';
 import { useAuth } from '../../contexts/AuthContext';
 import './OrderList.css';
@@ -144,8 +144,8 @@ const OrderDetail = () => {
   const orderItems = order.order_items || [];
 
   return (
-    <Container fluid className="p-3 p-md-4 order-list-container fade-in">
-      <div className="d-flex justify-content-between align-items-center mb-4 detail-header">
+    <Container fluid className="p-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <Button
             variant="link"
@@ -156,9 +156,11 @@ const OrderDetail = () => {
             <i className="bi bi-arrow-left me-2"></i>
             Back to Orders
           </Button>
-          <h1 className="h3 mb-0 detail-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
-            Order {order.order_id} 
-            <span className="ms-3">{getStatusBadge(order.order_status)}</span>
+          <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+            Order {order.order_id}
+            <Badge className={`status-badge status-${order.order_status.toLowerCase()} ms-2`}>
+              {order.order_status}
+            </Badge>
           </h1>
           <div className="text-muted mt-2" style={{ fontSize: '78.75%' }}>
             Created on {formatDate(order.created_at)}
@@ -186,61 +188,115 @@ const OrderDetail = () => {
         </div>
       </div>
 
-      <Row className="mb-4">
-        <Col md={4}>
-          <Card className="detail-card shadow-sm">
-            <Card.Body className="p-3 p-md-4">
+      <Row>
+        <Col lg={8}>
+          <Card className="mb-4 shadow-sm">
+            <Card.Body>
               <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Order Information</h5>
-              <div className="mb-3">
-                <div className="d-flex align-items-center mb-3">
-                  <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                    <i className="bi bi-card-list text-primary"></i>
-                  </div>
-                  <div>
-                    <small className="text-muted d-block" style={{ fontSize: '75%' }}>Order ID</small>
-                    <span className="fw-medium" style={{ fontSize: '78.75%' }}>{order.order_id}</span>
-                  </div>
-                </div>
-                
-                <div className="d-flex align-items-center mb-3">
-                  <div className="bg-info bg-opacity-10 rounded-circle p-2 me-3">
-                    <i className="bi bi-grid-3x3 text-info"></i>
-                  </div>
-                  <div>
-                    <small className="text-muted d-block" style={{ fontSize: '75%' }}>Table</small>
-                    <span className="fw-medium" style={{ fontSize: '78.75%' }}>{order.table_id}</span>
+              <div className="row g-3">
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-card-list text-primary"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Order ID</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{order.order_id}</span>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="d-flex align-items-center mb-3">
-                  <div className="bg-success bg-opacity-10 rounded-circle p-2 me-3">
-                    <i className="bi bi-calendar-event text-success"></i>
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-info bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-grid-3x3 text-info"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Table</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{order.table_id}</span>
+                    </div>
                   </div>
-                  <div>
-                    <small className="text-muted d-block" style={{ fontSize: '75%' }}>Order Date</small>
-                    <span className="fw-medium" style={{ fontSize: '78.75%' }}>{formatDate(order.order_date)}</span>
+                </div>
+                
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-success bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-calendar-event text-success"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Order Date</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{formatDate(order.order_date)}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="d-flex align-items-center">
-                  <div className="bg-warning bg-opacity-10 rounded-circle p-2 me-3">
-                    <i className="bi bi-currency-dollar text-warning"></i>
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-warning bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-currency-dollar text-warning"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Total Amount</small>
+                      <span className="fw-bold order-total" style={{ fontSize: '78.75%' }}>{formatPrice(order.order_total)}</span>
+                    </div>
                   </div>
-                  <div>
-                    <small className="text-muted d-block" style={{ fontSize: '75%' }}>Total Amount</small>
-                    <span className="fw-bold order-total" style={{ fontSize: '78.75%' }}>{formatPrice(order.order_total)}</span>
+                </div>
+
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-clock-history text-primary"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Created At</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                        {formatDate(order.created_at)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-sm-6">
+                  <div className="d-flex align-items-center">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                      <i className="bi bi-clock text-primary"></i>
+                    </div>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Last Updated</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                        {formatDate(order.updated_at)}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <Button
-                variant="primary"
-                className="mt-3 w-100"
-                onClick={() => navigate('/order-items')}
-                style={{ fontSize: '78.75%', fontWeight: 'bold' }}
-              >
-                <i className="bi bi-list-ul me-2"></i>
-                View Order Items
-              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col lg={4}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <h5 className="card-title mb-3" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Quick Actions</h5>
+              <div className="d-grid gap-2">
+                <Button
+                  variant="outline-primary"
+                  onClick={() => navigate('/order-items')}
+                  className="d-flex align-items-center justify-content-between"
+                  style={{ fontSize: '78.75%' }}
+                >
+                  <span>View Order Items</span>
+                  <i className="bi bi-list-ul"></i>
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  className="d-flex align-items-center justify-content-between"
+                  style={{ fontSize: '78.75%' }}
+                >
+                  <span>Print Order</span>
+                  <i className="bi bi-printer"></i>
+                </Button>
+              </div>
             </Card.Body>
           </Card>
         </Col>
@@ -254,8 +310,8 @@ const OrderDetail = () => {
         <Form onSubmit={handleStatusUpdate}>
           <Modal.Body>
             {formError && (
-              <Alert variant="danger" className="mb-3">
-                <p className="mb-0" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{formError}</p>
+              <Alert variant="danger" className="mb-3" style={{ fontSize: '78.75%' }}>
+                {formError}
               </Alert>
             )}
 
@@ -281,7 +337,7 @@ const OrderDetail = () => {
               variant="outline-secondary" 
               onClick={() => setShowStatusModal(false)}
               className="d-flex align-items-center gap-2"
-              style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+              style={{ fontSize: '78.75%' }}
             >
               <i className="bi bi-x-circle"></i>
               Cancel
@@ -290,9 +346,9 @@ const OrderDetail = () => {
               variant="primary" 
               type="submit"
               className="d-flex align-items-center gap-2"
-              style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+              style={{ fontSize: '78.75%' }}
             >
-              <i className="bi bi-check-circle"></i>
+              <i className="bi bi-check2-circle"></i>
               Update Status
             </Button>
           </Modal.Footer>

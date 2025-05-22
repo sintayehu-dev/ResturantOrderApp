@@ -130,30 +130,35 @@ const OrderItemDetail = () => {
             <i className="bi bi-arrow-left me-2"></i>
             Back to Order Items
           </Button>
-          <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>{orderItem.order_item_id}</h1>
+          <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+            Order Item Details
+          </h1>
         </div>
         <div className="d-flex gap-2">
           <Button
             variant="outline-primary"
             onClick={() => setShowEditModal(true)}
+            className="d-flex align-items-center gap-2"
             style={{ fontSize: '78.75%', fontWeight: 'bold' }}
           >
-            <i className="bi bi-pencil me-2"></i>
+            <i className="bi bi-pencil"></i>
             Edit Order Item
           </Button>
           <Button
             variant="outline-danger"
             onClick={() => setShowDeleteModal(true)}
+            className="d-flex align-items-center gap-2"
             style={{ fontSize: '78.75%', fontWeight: 'bold' }}
           >
-            <i className="bi bi-trash me-2"></i>
+            <i className="bi bi-trash"></i>
             Delete Order Item
           </Button>
         </div>
       </div>
+
       <Row>
         <Col md={6}>
-          <Card className="mb-4">
+          <Card className="shadow-sm">
             <Card.Body>
               <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Order Item Details</h5>
               <div className="row g-3">
@@ -207,19 +212,23 @@ const OrderItemDetail = () => {
                       <i className="bi bi-clock-history text-primary"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Created At</small>
-                      <span className="fw-medium">{orderItem.created_at ? new Date(orderItem.created_at).toLocaleString() : ''}</span>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Created At</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                        {orderItem.created_at ? new Date(orderItem.created_at).toLocaleString() : ''}
+                      </span>
                     </div>
                   </div>
                 </div>
                 <div className="col-12">
                   <div className="d-flex align-items-center">
                     <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                      <i className="bi bi-clock-history text-primary"></i>
+                      <i className="bi bi-clock text-primary"></i>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Updated At</small>
-                      <span className="fw-medium">{orderItem.updated_at ? new Date(orderItem.updated_at).toLocaleString() : ''}</span>
+                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Last Updated</small>
+                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                        {orderItem.updated_at ? new Date(orderItem.updated_at).toLocaleString() : ''}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -228,6 +237,7 @@ const OrderItemDetail = () => {
           </Card>
         </Col>
       </Row>
+
       {/* Edit Order Item Modal */}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
         <Modal.Header closeButton>
@@ -278,24 +288,35 @@ const OrderItemDetail = () => {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-secondary" onClick={() => setShowEditModal(false)} style={{ fontSize: '78.75%' }}>
-              <i className="bi bi-x-circle me-2"></i>
+            <Button 
+              variant="outline-secondary" 
+              onClick={() => setShowEditModal(false)}
+              className="d-flex align-items-center gap-2"
+              style={{ fontSize: '78.75%' }}
+            >
+              <i className="bi bi-x-circle"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" style={{ fontSize: '78.75%' }}>
-              <i className="bi bi-check2-circle me-2"></i>
+            <Button 
+              variant="primary" 
+              type="submit"
+              className="d-flex align-items-center gap-2"
+              style={{ fontSize: '78.75%' }}
+            >
+              <i className="bi bi-check2-circle"></i>
               Save Changes
             </Button>
           </Modal.Footer>
         </Form>
       </Modal>
+
       {/* Delete Confirmation Modal */}
       <ConfirmDialog
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
         title="Delete Order Item"
-        message={`Are you sure you want to delete ${orderItem.order_item_id}? This action cannot be undone.`}
+        message={`Are you sure you want to delete order item ${orderItem.order_item_id}? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
       />
