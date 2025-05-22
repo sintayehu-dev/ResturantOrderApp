@@ -105,9 +105,24 @@ func CreateOrderItem() gin.HandlerFunc {
 			return
 		}
 
-		if err := databases.DB.WithContext(ctx).Create(&orderItem).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to add item to the order. Please try again later."})
-			return
+		// Check if an order item with the same order_id and food_id already exists
+		var existingOrderItem models.OrderItem
+		result := databases.DB.WithContext(ctx).Where("order_id = ? AND food_id = ?", orderItem.OrderID, orderItem.FoodID).First(&existingOrderItem)
+
+		if result.Error == nil {
+			// If item exists, update the quantity instead of creating a new one
+			existingOrderItem.Quantity += orderItem.Quantity
+			if err := databases.DB.WithContext(ctx).Save(&existingOrderItem).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to update the existing order item. Please try again later."})
+				return
+			}
+			orderItem = existingOrderItem
+		} else {
+			// If item doesn't exist, create a new one
+			if err := databases.DB.WithContext(ctx).Create(&orderItem).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to add item to the order. Please try again later."})
+				return
+			}
 		}
 
 		var totalAmount float64

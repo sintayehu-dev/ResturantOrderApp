@@ -281,7 +281,7 @@ const OrderDetail = () => {
               <div className="d-grid gap-2">
                 <Button
                   variant="outline-primary"
-                  onClick={() => navigate('/order-items')}
+                  onClick={() => navigate(`/order-items?order_id=${order.order_id}`)}
                   className="d-flex align-items-center justify-content-between"
                   style={{ fontSize: '78.75%' }}
                 >

@@ -117,9 +117,25 @@ const OrderItemList = () => {
       if (selectedOrderItem) {
         await updateOrderItem(selectedOrderItem.order_item_id, payload);
       } else {
-        await createOrderItem(payload);
+        // Check if an order item with the same order_id and food_id exists
+        const existingItem = orderItems.find(item => 
+          item.order_id === formData.order_id && item.food_id === formData.food_id
+        );
+        
+        if (existingItem) {
+          // If exists, update with combined quantity
+          const updatedPayload = {
+            ...payload,
+            order_item_id: existingItem.order_item_id,
+            quantity: existingItem.quantity + parseInt(formData.quantity, 10)
+          };
+          await updateOrderItem(existingItem.order_item_id, updatedPayload);
+        } else {
+          await createOrderItem(payload);
+        }
       }
       handleCloseModal();
+      fetchOrderItems(); // Refresh the list
     } catch (err) {
       setFormError(err.message || 'Failed to save order item');
     }

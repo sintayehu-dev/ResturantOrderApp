@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Button, Alert, Row, Col, Modal, Form, InputGroup, Badge } from 'react-bootstrap';
 import { useInvoice } from '../../contexts/InvoiceContext';
 import { useOrder } from '../../contexts/OrderContext';
+import jsPDF from 'jspdf';
 
 const InvoiceDetail = () => {
   const { invoiceId } = useParams();
@@ -123,6 +124,206 @@ const InvoiceDetail = () => {
       return new Date(dateString).toLocaleString();
     } catch {
       return dateString;
+    }
+  };
+
+  // Download invoice using browser's print/save capabilities
+  const handleDownloadInvoice = () => {
+    if (!invoice) return;
+    
+    try {
+      // Create a new window with our invoice template
+      const printWindow = window.open('', '_blank', 'width=800,height=600');
+      
+      if (!printWindow) {
+        alert("Please allow popups for this website to download invoices");
+        return;
+      }
+      
+      // Get color for status badge
+      const getStatusColor = (status) => {
+        if (status === 'paid') return '#22c55e';
+        if (status === 'pending') return '#f59e0b';
+        return '#ef4444';
+      };
+      
+      // Write the HTML content to the new window
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Invoice #${invoice.invoice_id}</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              color: #333;
+            }
+            .invoice-container {
+              max-width: 800px;
+              margin: 0 auto;
+              padding: 20px;
+              box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            .invoice-header {
+              background-color: #3B82F6;
+              color: white;
+              padding: 20px;
+              margin-bottom: 20px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+            .company-details {
+              text-align: right;
+            }
+            .invoice-title {
+              font-size: 24px;
+              font-weight: bold;
+              margin: 0;
+            }
+            .invoice-details {
+              margin-bottom: 30px;
+              display: flex;
+              justify-content: space-between;
+            }
+            .invoice-id {
+              font-size: 18px;
+              margin-bottom: 10px;
+            }
+            .detail-group {
+              margin-bottom: 20px;
+              background-color: #f8f9fa;
+              padding: 15px;
+              border-radius: 5px;
+            }
+            .detail-row {
+              margin-bottom: 8px;
+              display: flex;
+            }
+            .detail-label {
+              font-weight: bold;
+              width: 150px;
+            }
+            .status-badge {
+              display: inline-block;
+              padding: 5px 10px;
+              border-radius: 4px;
+              color: white;
+              font-weight: bold;
+            }
+            .total-amount {
+              font-size: 20px;
+              font-weight: bold;
+              margin-top: 20px;
+              color: #3B82F6;
+              text-align: right;
+            }
+            .invoice-footer {
+              margin-top: 50px;
+              padding-top: 20px;
+              border-top: 1px solid #ddd;
+              text-align: center;
+              font-size: 12px;
+              color: #777;
+            }
+            @media print {
+              body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+              .invoice-container {
+                box-shadow: none;
+              }
+              .no-print {
+                display: none;
+              }
+            }
+            .btn {
+              background-color: #3B82F6;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 4px;
+              cursor: pointer;
+              margin-top: 20px;
+              font-size: 14px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="invoice-container">
+            <div class="invoice-header">
+              <div>
+                <p class="invoice-title">INVOICE</p>
+              </div>
+              <div class="company-details">
+                <p style="margin:0;">RestaurantApp</p>
+                <p style="margin:0;font-size:12px;">info@restaurantapp.com</p>
+              </div>
+            </div>
+            
+            <div class="invoice-details">
+              <div>
+                <p class="invoice-id">Invoice #${invoice.invoice_id}</p>
+                <div class="detail-row">
+                  <span class="detail-label">Order ID:</span>
+                  <span>${invoice.order_id}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Payment Method:</span>
+                  <span>${invoice.payment_method}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Payment Status:</span>
+                  <span>
+                    <span class="status-badge" style="background-color: ${getStatusColor(invoice.payment_status)}">
+                      ${invoice.payment_status.toUpperCase()}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div class="detail-row">
+                  <span class="detail-label">Issue Date:</span>
+                  <span>${formatDate(invoice.created_at)}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Due Date:</span>
+                  <span>${formatDate(invoice.payment_due_date)}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Last Updated:</span>
+                  <span>${formatDate(invoice.updated_at)}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="detail-group">
+              <div class="total-amount">Total Amount: $${parseFloat(invoice.total_amount).toFixed(2)}</div>
+            </div>
+            
+            <div class="invoice-footer">
+              <p>Thank you for your business!</p>
+            </div>
+            
+            <div class="no-print" style="text-align: center">
+              <button class="btn" onclick="window.print()">Print / Save as PDF</button>
+            </div>
+          </div>
+        </body>
+        </html>
+      `);
+      
+      // Close the document to finish writing
+      printWindow.document.close();
+      
+      // Focus on the new window
+      printWindow.focus();
+    } catch (error) {
+      console.error("Error generating invoice:", error);
+      alert("There was an error generating the invoice. Please try again.");
     }
   };
 
@@ -311,6 +512,7 @@ const InvoiceDetail = () => {
               <div className="d-grid gap-2">
                 <Button
                   variant="outline-primary"
+                  onClick={() => navigate(`/orders/${invoice.order_id}`)}
                   className="d-flex align-items-center justify-content-between"
                   style={{ fontSize: '78.75%' }}
                 >
@@ -321,6 +523,7 @@ const InvoiceDetail = () => {
                   variant="outline-primary"
                   className="d-flex align-items-center justify-content-between"
                   style={{ fontSize: '78.75%' }}
+                  onClick={handleDownloadInvoice}
                 >
                   <span>Download Invoice</span>
                   <i className="bi bi-download"></i>
