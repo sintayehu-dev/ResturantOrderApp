@@ -30,7 +30,7 @@ func VerifyPassword(userPassword string, providedPassword string) (bool, string)
 	check := true
 	msg := ""
 	if err != nil {
-		msg = "login or password is incorrect"
+		msg = "invalid credentials"
 		check = false
 	}
 	return check, msg

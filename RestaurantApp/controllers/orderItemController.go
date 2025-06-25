@@ -119,9 +119,9 @@ func CreateOrderItem() gin.HandlerFunc {
 			orderItem = existingOrderItem
 		} else {
 			// If item doesn't exist, create a new one
-			if err := databases.DB.WithContext(ctx).Create(&orderItem).Error; err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to add item to the order. Please try again later."})
-				return
+		if err := databases.DB.WithContext(ctx).Create(&orderItem).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to add item to the order. Please try again later."})
+			return
 			}
 		}
 
