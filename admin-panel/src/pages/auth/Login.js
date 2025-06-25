@@ -49,8 +49,8 @@ const Login = () => {
       console.log('✅ Login Component: Login successful, navigating to:', from);
       navigate(from, { replace: true });
     } catch (err) {
-      console.error('❌ Login Component: Login failed:', err.message);
-      setError(err.message || 'Failed to sign in');
+      console.error('❌ Login Component: Login failed:', err);
+      setError(err);
     } finally {
       setLoading(false);
       console.log('ℹ️ Login Component: Login attempt completed');

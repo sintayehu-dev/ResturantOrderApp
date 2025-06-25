@@ -157,7 +157,7 @@ const OrderDetail = () => {
             Back to Orders
           </Button>
           <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
-            Order {order.order_id}
+            Order {order.order_id} 
             <Badge className={`status-badge status-${order.order_status.toLowerCase()} ms-2`}>
               {order.order_status}
             </Badge>
@@ -196,51 +196,51 @@ const OrderDetail = () => {
               <div className="row g-3">
                 <div className="col-sm-6">
                   <div className="d-flex align-items-center">
-                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                      <i className="bi bi-card-list text-primary"></i>
-                    </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Order ID</small>
-                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{order.order_id}</span>
+                  <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                    <i className="bi bi-card-list text-primary"></i>
+                  </div>
+                  <div>
+                    <small className="text-muted d-block" style={{ fontSize: '75%' }}>Order ID</small>
+                    <span className="fw-medium" style={{ fontSize: '78.75%' }}>{order.order_id}</span>
                     </div>
                   </div>
                 </div>
                 
                 <div className="col-sm-6">
                   <div className="d-flex align-items-center">
-                    <div className="bg-info bg-opacity-10 rounded-circle p-2 me-3">
-                      <i className="bi bi-grid-3x3 text-info"></i>
-                    </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Table</small>
-                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{order.table_id}</span>
+                  <div className="bg-info bg-opacity-10 rounded-circle p-2 me-3">
+                    <i className="bi bi-grid-3x3 text-info"></i>
+                  </div>
+                  <div>
+                    <small className="text-muted d-block" style={{ fontSize: '75%' }}>Table</small>
+                    <span className="fw-medium" style={{ fontSize: '78.75%' }}>{order.table_id}</span>
                     </div>
                   </div>
                 </div>
                 
                 <div className="col-sm-6">
                   <div className="d-flex align-items-center">
-                    <div className="bg-success bg-opacity-10 rounded-circle p-2 me-3">
-                      <i className="bi bi-calendar-event text-success"></i>
-                    </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Order Date</small>
-                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{formatDate(order.order_date)}</span>
+                  <div className="bg-success bg-opacity-10 rounded-circle p-2 me-3">
+                    <i className="bi bi-calendar-event text-success"></i>
+                  </div>
+                  <div>
+                    <small className="text-muted d-block" style={{ fontSize: '75%' }}>Order Date</small>
+                    <span className="fw-medium" style={{ fontSize: '78.75%' }}>{formatDate(order.order_date)}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="col-sm-6">
-                  <div className="d-flex align-items-center">
-                    <div className="bg-warning bg-opacity-10 rounded-circle p-2 me-3">
-                      <i className="bi bi-currency-dollar text-warning"></i>
-                    </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Total Amount</small>
-                      <span className="fw-bold order-total" style={{ fontSize: '78.75%' }}>{formatPrice(order.order_total)}</span>
-                    </div>
+                <div className="d-flex align-items-center">
+                  <div className="bg-warning bg-opacity-10 rounded-circle p-2 me-3">
+                    <i className="bi bi-currency-dollar text-warning"></i>
+                  </div>
+                  <div>
+                    <small className="text-muted d-block" style={{ fontSize: '75%' }}>Total Amount</small>
+                    <span className="fw-bold order-total" style={{ fontSize: '78.75%' }}>{formatPrice(order.order_total)}</span>
                   </div>
                 </div>
+              </div>
 
                 <div className="col-sm-6">
                   <div className="d-flex align-items-center">
@@ -288,14 +288,14 @@ const OrderDetail = () => {
                   <span>View Order Items</span>
                   <i className="bi bi-list-ul"></i>
                 </Button>
-                <Button
+              <Button
                   variant="outline-primary"
                   className="d-flex align-items-center justify-content-between"
                   style={{ fontSize: '78.75%' }}
-                >
+              >
                   <span>Print Order</span>
                   <i className="bi bi-printer"></i>
-                </Button>
+              </Button>
               </div>
             </Card.Body>
           </Card>

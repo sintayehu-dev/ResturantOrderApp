@@ -1,12 +1,15 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
-const API_URL = 'http://localhost:9000';
+// Remove trailing slash from base URL if present
+const cleanBaseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+const AUTH_API_URL = `${cleanBaseUrl}/users`;
 
 const authService = {
   // Signup user
   async signup(userData) {
     try {
-      const response = await axios.post(`${API_URL}/users/signup`, {
+      const response = await axios.post(`${AUTH_API_URL}/signup`, {
         first_name: userData.firstName,
         last_name: userData.lastName,
         email: userData.email,
@@ -15,25 +18,25 @@ const authService = {
         user_type: 'ADMIN'
       });
 
-      if (response.data) {
-        // Store the user data in localStorage
-        localStorage.setItem('user', JSON.stringify({
-          email: response.data.email,
-          id: response.data.id,
-          userId: response.data.user_id
-        }));
-      }
+      // Do not store user in localStorage after signup
+      // if (response.data) {
+      //   localStorage.setItem('user', JSON.stringify({
+      //     email: response.data.email,
+      //     id: response.data.id,
+      //     userId: response.data.user_id
+      //   }));
+      // }
 
       return response.data;
     } catch (error) {
-      throw error.response?.data?.message || 'Failed to sign up';
+      throw error.response?.data?.error;
     }
   },
 
   // Login user
   async login(email, password) {
     try {
-      const response = await axios.post(`${API_URL}/users/login`, {
+      const response = await axios.post(`${AUTH_API_URL}/login`, {
         email,
         password
       });
@@ -45,7 +48,7 @@ const authService = {
 
       return response.data;
     } catch (error) {
-      throw error.response?.data?.message || 'Failed to login';
+      throw error.response?.data?.error;
     }
   },
 

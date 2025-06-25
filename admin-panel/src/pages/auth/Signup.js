@@ -16,18 +16,17 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [success, setSuccess] = useState('');
   
   const navigate = useNavigate();
   const { signup, isAuthenticated } = useAuth();
 
   // Add effect to check authentication status
   useEffect(() => {
-    console.log('🔍 Signup Component: Checking authentication status');
-    if (isAuthenticated()) {
-      console.log('✅ Signup Component: User is already authenticated, redirecting to dashboard');
+    if (isAuthenticated() && !success) {
       navigate('/dashboard', { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, success]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,11 +59,13 @@ const Signup = () => {
 
     try {
       setError('');
+      setSuccess('');
       setLoading(true);
       await signup(formData);
-      navigate('/dashboard');
+      setSuccess('Account created successfully! Please log in.');
+      setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
-      setError(err.message || 'Failed to create an account');
+      setError(err);
     } finally {
       setLoading(false);
     }
@@ -84,6 +85,12 @@ const Signup = () => {
               {error && (
                 <Alert variant="danger" className="mb-4">
                   {error}
+                </Alert>
+              )}
+
+              {success && (
+                <Alert variant="success" className="mb-4">
+                  {success}
                 </Alert>
               )}
 

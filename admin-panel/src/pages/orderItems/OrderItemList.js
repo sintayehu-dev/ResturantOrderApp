@@ -131,7 +131,7 @@ const OrderItemList = () => {
           };
           await updateOrderItem(existingItem.order_item_id, updatedPayload);
         } else {
-          await createOrderItem(payload);
+        await createOrderItem(payload);
         }
       }
       handleCloseModal();

@@ -161,80 +161,80 @@ const MenuDetail = () => {
           <Card className="mb-4 shadow-sm">
             <Card.Body>
               <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Menu Details</h5>
-              <div className="row g-3">
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center">
-                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                      <i className="bi bi-tag text-primary"></i>
-                    </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Menu ID</small>
-                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>{menu.menu_id}</span>
+                <div className="row g-3">
+                  <div className="col-sm-6">
+                    <div className="d-flex align-items-center">
+                      <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                        <i className="bi bi-tag text-primary"></i>
+                      </div>
+                      <div>
+                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Menu ID</small>
+                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>{menu.menu_id}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center">
+                  <div className="col-sm-6">
+                    <div className="d-flex align-items-center">
                     <div className="bg-info bg-opacity-10 rounded-circle p-2 me-3">
                       <i className="bi bi-grid text-info"></i>
-                    </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Category</small>
-                      <Badge bg="info" className="text-capitalize" style={{ fontSize: '78.75%' }}>
-                        {menu.category}
-                      </Badge>
+                      </div>
+                      <div>
+                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Category</small>
+                        <Badge bg="info" className="text-capitalize" style={{ fontSize: '78.75%' }}>
+                          {menu.category}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center">
+                  <div className="col-sm-6">
+                    <div className="d-flex align-items-center">
                     <div className="bg-success bg-opacity-10 rounded-circle p-2 me-3">
                       <i className="bi bi-calendar-check text-success"></i>
-                    </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Start Date</small>
-                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
-                        {format(new Date(menu.start_date), 'MMM dd, yyyy HH:mm')}
-                      </span>
+                      </div>
+                      <div>
+                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Start Date</small>
+                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                          {format(new Date(menu.start_date), 'MMM dd, yyyy HH:mm')}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center">
+                  <div className="col-sm-6">
+                    <div className="d-flex align-items-center">
                     <div className="bg-danger bg-opacity-10 rounded-circle p-2 me-3">
                       <i className="bi bi-calendar-x text-danger"></i>
-                    </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>End Date</small>
-                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
-                        {format(new Date(menu.end_date), 'MMM dd, yyyy HH:mm')}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center">
-                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                      <i className="bi bi-clock-history text-primary"></i>
-                    </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Created At</small>
-                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
-                        {format(new Date(menu.created_at), 'MMM dd, yyyy HH:mm')}
-                      </span>
+                      </div>
+                      <div>
+                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>End Date</small>
+                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                          {format(new Date(menu.end_date), 'MMM dd, yyyy HH:mm')}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="d-flex align-items-center">
-                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                      <i className="bi bi-clock text-primary"></i>
+                  <div className="col-sm-6">
+                    <div className="d-flex align-items-center">
+                      <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                        <i className="bi bi-clock-history text-primary"></i>
+                      </div>
+                      <div>
+                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Created At</small>
+                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                          {format(new Date(menu.created_at), 'MMM dd, yyyy HH:mm')}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <small className="text-muted d-block" style={{ fontSize: '75%' }}>Last Updated</small>
-                      <span className="fw-medium" style={{ fontSize: '78.75%' }}>
-                        {format(new Date(menu.updated_at), 'MMM dd, yyyy HH:mm')}
-                      </span>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="d-flex align-items-center">
+                      <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                        <i className="bi bi-clock text-primary"></i>
+                      </div>
+                      <div>
+                        <small className="text-muted d-block" style={{ fontSize: '75%' }}>Last Updated</small>
+                        <span className="fw-medium" style={{ fontSize: '78.75%' }}>
+                          {format(new Date(menu.updated_at), 'MMM dd, yyyy HH:mm')}
+                        </span>
                     </div>
                   </div>
                 </div>

@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }) => {
   const signup = async (userData) => {
     try {
       const response = await authService.signup(userData);
-      setUser(response);
       return response;
     } catch (error) {
       throw error;
