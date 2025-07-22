@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Container, Card, Button, Table, Badge, Modal, Form, Alert } from 'react-bootstrap';
 import { useOrder } from '../../contexts/OrderContext';
 import { useTable } from '../../contexts/TableContext';
@@ -22,19 +22,7 @@ const OrderList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
 
-  useEffect(() => {
-    fetchOrders();
-    fetchTables();
-    
-    // Check if we should open create modal (coming from dashboard)
-    if (location.state?.openCreateModal) {
-      handleShowModal();
-      // Clear the state to prevent modal from opening on page refresh
-      window.history.replaceState({}, document.title);
-    }
-  }, [fetchOrders, fetchTables, location.state, handleShowModal]);
-
-  const handleShowModal = async (order = null) => {
+  const handleShowModal = useCallback(async (order = null) => {
     if (order) {
       setFormData({
         order_id: order.order_id,
@@ -53,7 +41,19 @@ const OrderList = () => {
     }
     setFormError('');
     setShowModal(true);
-  };
+  }, [getNextOrderId, setFormData, setFormError, setShowModal]);
+
+  useEffect(() => {
+    fetchOrders();
+    fetchTables();
+    
+    // Check if we should open create modal (coming from dashboard)
+    if (location.state?.openCreateModal) {
+      handleShowModal();
+      // Clear the state to prevent modal from opening on page refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [fetchOrders, fetchTables, location.state, handleShowModal]);
 
   const handleCloseModal = () => {
     setShowModal(false);

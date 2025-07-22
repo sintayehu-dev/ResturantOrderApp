@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Button, Alert, Badge, Row, Col, Modal, Form, InputGroup } from 'react-bootstrap';
 import { useFood } from '../../contexts/FoodContext';
 import { useMenu } from '../../contexts/MenuContext';
-import { useAuth } from '../../contexts/AuthContext';
 
 const FoodDetail = () => {
   const { foodId } = useParams();

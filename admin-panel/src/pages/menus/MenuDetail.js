@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Button, Alert, Badge, Row, Col, Modal, Form } from 'react-bootstrap';
 import { useMenu } from '../../contexts/MenuContext';
-import { useAuth } from '../../contexts/AuthContext';
 import { format } from 'date-fns';
 
 const MenuDetail = () => {

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Button, Alert, Row, Col, Modal, Form } from 'react-bootstrap';
 import { useTable } from '../../contexts/TableContext';
-import { useAuth } from '../../contexts/AuthContext';
 import './TableList.css';
 
 const TableDetail = () => {
