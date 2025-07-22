@@ -22,8 +22,6 @@ const FoodDetail = () => {
   });
   const [formError, setFormError] = useState('');
 
-  const isAdmin = user?.User_type === 'ADMIN';
-
   useEffect(() => {
     const fetchFoodDetails = async () => {
       try {

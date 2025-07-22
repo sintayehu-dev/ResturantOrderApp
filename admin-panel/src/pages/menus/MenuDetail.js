@@ -21,8 +21,6 @@ const MenuDetail = () => {
   });
   const [formError, setFormError] = useState('');
 
-  const isAdmin = user?.User_type === 'ADMIN';
-
   useEffect(() => {
     const fetchMenuDetails = async () => {
       try {

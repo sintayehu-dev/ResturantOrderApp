@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Card, Button, Table, Badge, Modal, Form, Alert, Row, Col } from 'react-bootstrap';
+import { Container, Card, Button, Table, Badge, Modal, Form, Alert } from 'react-bootstrap';
 import { useOrder } from '../../contexts/OrderContext';
 import { useTable } from '../../contexts/TableContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { format } from 'date-fns';
 import './OrderList.css';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 
@@ -11,7 +10,6 @@ const OrderList = () => {
   const { orders, loading, error, fetchOrders, createOrder, deleteOrder, getNextOrderId } = useOrder();
   const { tables, fetchTables } = useTable();
   const [showModal, setShowModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
   const [formData, setFormData] = useState({
     order_id: '',
     table_id: '',
@@ -38,7 +36,6 @@ const OrderList = () => {
 
   const handleShowModal = async (order = null) => {
     if (order) {
-      setSelectedOrder(order);
       setFormData({
         order_id: order.order_id,
         table_id: order.table_id,
@@ -46,7 +43,6 @@ const OrderList = () => {
         order_total: order.order_total,
       });
     } else {
-      setSelectedOrder(null);
       const nextOrderId = await getNextOrderId();
       setFormData({
         order_id: nextOrderId,
@@ -61,7 +57,6 @@ const OrderList = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedOrder(null);
     setFormData({
       order_id: '',
       table_id: '',

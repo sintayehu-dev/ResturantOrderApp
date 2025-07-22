@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Button, Alert, Row, Col, Modal, Form, InputGroup, Badge } from 'react-bootstrap';
 import { useInvoice } from '../../contexts/InvoiceContext';
 import { useOrder } from '../../contexts/OrderContext';
-import jsPDF from 'jspdf';
 
 const InvoiceDetail = () => {
   const { invoiceId } = useParams();

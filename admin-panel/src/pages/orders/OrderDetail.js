@@ -10,7 +10,7 @@ const OrderDetail = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { getOrderById, updateOrder, deleteOrder, loading, error } = useOrder();
-  const { user } = useAuth();
+  // const { user } = useAuth(); // Removed unused variable
   
   const [order, setOrder] = useState(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -67,35 +67,35 @@ const OrderDetail = () => {
     }
   };
 
-  const getStatusBadge = (status) => {
-    let badgeClass = '';
+  // const getStatusBadge = (status) => { // Remove if not used
+  //   let badgeClass = '';
     
-    switch(status.toLowerCase()) {
-      case 'pending':
-        badgeClass = 'status-pending';
-        break;
-      case 'preparing':
-        badgeClass = 'status-preparing';
-        break;
-      case 'ready':
-        badgeClass = 'status-ready';
-        break;
-      case 'completed':
-        badgeClass = 'status-completed';
-        break;
-      case 'cancelled':
-        badgeClass = 'status-cancelled';
-        break;
-      default:
-        badgeClass = 'bg-secondary';
-    }
+  //   switch(status.toLowerCase()) {
+  //     case 'pending':
+  //       badgeClass = 'status-pending';
+  //       break;
+  //     case 'preparing':
+  //       badgeClass = 'status-preparing';
+  //       break;
+  //     case 'ready':
+  //       badgeClass = 'status-ready';
+  //       break;
+  //     case 'completed':
+  //       badgeClass = 'status-completed';
+  //       break;
+  //     case 'cancelled':
+  //       badgeClass = 'status-cancelled';
+  //       break;
+  //     default:
+  //       badgeClass = 'bg-secondary';
+  //   }
     
-    return (
-      <Badge className={`status-badge ${badgeClass}`}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
-    );
-  };
+  //   return (
+  //     <Badge className={`status-badge ${badgeClass}`}>
+  //       {status.charAt(0).toUpperCase() + status.slice(1)}
+  //     </Badge>
+  //   );
+  // };
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
@@ -141,7 +141,7 @@ const OrderDetail = () => {
   }
 
   // Always use an array for order items
-  const orderItems = order.order_items || [];
+  // const orderItems = order.order_items || []; // Remove 'orderItems' variable if present
 
   return (
     <Container fluid className="p-4">

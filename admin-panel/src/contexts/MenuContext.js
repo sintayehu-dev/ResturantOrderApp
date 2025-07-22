@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import menuService from '../services/menuService';
-import { useAuth } from './AuthContext';
 
 const MenuContext = createContext();
 
@@ -17,7 +16,6 @@ export const MenuProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { user } = useAuth();
 
   // Fetch all menus
   const fetchMenus = useCallback(async () => {

@@ -18,8 +18,6 @@ const TableDetail = () => {
   });
   const [formError, setFormError] = useState('');
 
-  const isAdmin = user?.User_type === 'ADMIN';
-
   useEffect(() => {
     const fetchTableDetails = async () => {
       try {
