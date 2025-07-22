@@ -9,7 +9,6 @@ const TableDetail = () => {
   const { tableId } = useParams();
   const navigate = useNavigate();
   const { getTableById, updateTable, deleteTable, loading, error } = useTable();
-  const { user } = useAuth();
   const [table, setTable] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

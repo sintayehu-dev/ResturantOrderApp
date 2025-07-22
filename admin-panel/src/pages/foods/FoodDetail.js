@@ -10,7 +10,6 @@ const FoodDetail = () => {
   const navigate = useNavigate();
   const { getFoodById, updateFood, deleteFood, loading, error } = useFood();
   const { menus, fetchMenus } = useMenu();
-  const { user } = useAuth();
   const [food, setFood] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

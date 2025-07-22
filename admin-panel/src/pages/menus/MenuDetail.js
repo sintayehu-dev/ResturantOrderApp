@@ -9,7 +9,6 @@ const MenuDetail = () => {
   const { menuId } = useParams();
   const navigate = useNavigate();
   const { getMenuById, updateMenu, deleteMenu, loading, error } = useMenu();
-  const { user } = useAuth();
   const [menu, setMenu] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

@@ -32,7 +32,7 @@ const OrderList = () => {
       // Clear the state to prevent modal from opening on page refresh
       window.history.replaceState({}, document.title);
     }
-  }, [fetchOrders, fetchTables, location.state]);
+  }, [fetchOrders, fetchTables, location.state, handleShowModal]);
 
   const handleShowModal = async (order = null) => {
     if (order) {

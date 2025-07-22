@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Button, Alert, Row, Col, Modal, Form, Badge } from 'react-bootstrap';
 import { useOrder } from '../../contexts/OrderContext';
-import { useAuth } from '../../contexts/AuthContext';
 import './OrderList.css';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 
