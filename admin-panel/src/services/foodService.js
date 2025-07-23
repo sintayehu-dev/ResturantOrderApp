@@ -57,6 +57,21 @@ foodApi.interceptors.response.use(
   }
 );
 
+const uploadFoodImage = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('food_image', file);
+    const response = await axios.post(
+      `${cleanBaseUrl}/foods/upload-image`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
+    return response.data.image_url;
+  } catch (error) {
+    throw handleApiError(error);
+  }
+};
+
 const foodService = {
   // Get all foods
   getAllFoods: async () => {
@@ -139,7 +154,8 @@ const foodService = {
       console.error('Error getting next food ID:', error);
       return 'food-001'; // Default fallback
     }
-  }
+  },
+  uploadFoodImage,
 };
 
 export default foodService; 

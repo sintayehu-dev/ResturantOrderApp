@@ -152,6 +152,11 @@ export const FoodProvider = ({ children }) => {
     }
   }, []);
 
+  // Add image upload method
+  const uploadFoodImage = useCallback(async (file) => {
+    return await foodService.uploadFoodImage(file);
+  }, []);
+
   // Create context value
   const contextValue = {
     foods,
@@ -164,6 +169,7 @@ export const FoodProvider = ({ children }) => {
     updateFood,
     deleteFood,
     getNextFoodId,
+    uploadFoodImage, // add this
   };
 
   return (

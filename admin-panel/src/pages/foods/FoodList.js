@@ -5,9 +5,10 @@ import { useMenu } from '../../contexts/MenuContext';
 import { useNavigate } from 'react-router-dom';
 import './FoodList.css'; // Reusing the same CSS for consistency
 import ConfirmDialog from '../../components/common/ConfirmDialog';
+import axios from 'axios';
 
 const FoodList = () => {
-  const { foods, loading, error, fetchFoods, createFood, updateFood, deleteFood, getNextFoodId } = useFood();
+  const { foods, loading, error, fetchFoods, createFood, updateFood, deleteFood, getNextFoodId, uploadFoodImage } = useFood();
   const { menus, fetchMenus } = useMenu();
   const [showModal, setShowModal] = useState(false);
   const [selectedFood, setSelectedFood] = useState(null);
@@ -22,6 +23,7 @@ const FoodList = () => {
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [foodToDelete, setFoodToDelete] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     fetchFoods();
@@ -45,7 +47,7 @@ const FoodList = () => {
         food_id: nextFoodId,
         name: '',
         price: '',
-        food_image: '/images/foods/default.jpg', // Default image path
+        food_image: '',
         menu_id: '',
       });
     }
@@ -92,35 +94,36 @@ const FoodList = () => {
     }
   };
 
+  const handleImageChange = (e) => {
+    setSelectedImage(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setFormError('');
-      
-      // Validate form data
-      if (!formData.name.trim()) {
-        setFormError('Food name is required');
+      // Validate price
+      if (parseFloat(formData.price) < 0) {
+        setFormError('Price must be a positive number');
         return;
       }
-      
-      if (!formData.price || formData.price <= 0) {
-        setFormError('Price must be greater than zero');
+      // Validate required fields
+      if (!formData.name || !formData.menu_id) {
+        setFormError('Please fill in all required fields');
         return;
       }
-      
-      if (!formData.menu_id) {
-        setFormError('Menu selection is required');
-        return;
+      // Handle image upload
+      let imageUrl = '';
+      if (selectedImage) {
+        imageUrl = await uploadFoodImage(selectedImage);
       }
-      
       const payload = {
         food_id: formData.food_id,
         name: formData.name,
         price: parseFloat(formData.price),
-        food_image: formData.food_image,
+        food_image: imageUrl,
         menu_id: formData.menu_id,
       };
-      
       if (selectedFood) {
         await updateFood(selectedFood.food_id, payload);
       } else {
@@ -335,18 +338,15 @@ const FoodList = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>Image URL</Form.Label>
+              <Form.Label>Image File</Form.Label>
               <Form.Control
-                type="text"
-                name="food_image"
-                value={formData.food_image}
-                onChange={handleInputChange}
-                placeholder="Enter image path or URL"
-                className="form-input"
-                style={{ fontSize: '78.75%' }}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                required={!selectedFood}
               />
-              <Form.Text className="text-muted" style={{ fontSize: '75%' }}>
-                Example: /images/foods/pizza.jpg
+              <Form.Text className="text-muted">
+                Upload a food image (jpg, png, etc.)
               </Form.Text>
             </Form.Group>
 
