@@ -16,4 +16,6 @@ func FoodRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.POST("/foods", controllers.CreateFood())            
 	incomingRoutes.PATCH("/foods/:food_id", controllers.UpdateFood()) 
 	incomingRoutes.DELETE("/foods/:food_id", controllers.DeleteFood())
+	// Image upload route
+	incomingRoutes.POST("/foods/upload-image", controllers.UploadFoodImage)
 }

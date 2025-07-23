@@ -9,6 +9,9 @@ import (
 	"github.com/RestaurantApp/helpers"
 	"github.com/RestaurantApp/models"
 	"github.com/gin-gonic/gin"
+	"os"
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 )
 
 // GetFoods retrieves all food items, with optional menu_id filtering
@@ -233,4 +236,38 @@ func DeleteFood() gin.HandlerFunc {
 
 		c.JSON(http.StatusOK, gin.H{"message": "Food item has been successfully removed from the menu"})
 	}
+}
+
+// UploadFoodImage uploads a food image to Cloudinary and returns the image URL
+func UploadFoodImage(c *gin.Context) {
+	file, err := c.FormFile("food_image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No file is received"})
+		return
+	}
+
+	src, err := file.Open()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to open file"})
+		return
+	}
+	defer src.Close()
+
+	cld, err := cloudinary.NewFromParams(
+		os.Getenv("CLOUDINARY_CLOUD_NAME"),
+		os.Getenv("CLOUDINARY_API_KEY"),
+		os.Getenv("CLOUDINARY_API_SECRET"),
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Cloudinary config error"})
+		return
+	}
+
+	uploadResult, err := cld.Upload.Upload(c, src, uploader.UploadParams{})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload to Cloudinary"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"image_url": uploadResult.SecureURL})
 }
