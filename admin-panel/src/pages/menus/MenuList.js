@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Badge, Modal, Form, Alert } from 'react-bootstrap';
-import { useMenu } from '../../contexts/MenuContext';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import './MenuList.css';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 
+const hardcodedCategories = [
+  "Breakfast",
+  "Lunch",
+  "Dinner",
+  "Appetizer",
+  "Dessert",
+  "Beverage"
+];
+
 const MenuList = () => {
-  const { menus, categories, loading, error, fetchMenus, fetchCategories, createMenu, updateMenu, deleteMenu } = useMenu();
+  const { menus, loading, error, fetchMenus, createMenu, updateMenu, deleteMenu } = useMenu();
   const [showModal, setShowModal] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [formData, setFormData] = useState({
@@ -24,8 +32,7 @@ const MenuList = () => {
 
   useEffect(() => {
     fetchMenus();
-    fetchCategories();
-  }, [fetchMenus, fetchCategories]);
+  }, [fetchMenus]);
 
   const getNextMenuId = () => {
     if (!menus.length) return 'menu-001';
@@ -299,7 +306,7 @@ const MenuList = () => {
                 style={{ fontSize: '78.75%' }}
               >
                 <option value="">Select a category</option>
-                {categories.map((category) => (
+                {hardcodedCategories.map((category) => (
                   <option key={category} value={category}>
                     {category}
                   </option>

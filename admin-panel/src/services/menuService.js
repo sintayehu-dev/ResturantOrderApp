@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../utils/config';
+import handleApiError from '../utils/handleApiError';
 
 // Remove trailing slash from base URL if present
 const cleanBaseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
@@ -64,7 +65,7 @@ const menuService = {
       const response = await menuApi.get('');  // Empty string instead of '/'
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -74,7 +75,7 @@ const menuService = {
       const response = await menuApi.get(`/${menuId}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -89,7 +90,7 @@ const menuService = {
       });
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -99,7 +100,7 @@ const menuService = {
       const response = await menuApi.post('', menuData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -109,7 +110,7 @@ const menuService = {
       const response = await menuApi.patch(`/${menuId}`, menuData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -119,7 +120,7 @@ const menuService = {
       const response = await menuApi.delete(`/${menuId}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 };

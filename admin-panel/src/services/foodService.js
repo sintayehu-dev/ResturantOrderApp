@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../utils/config';
+import handleApiError from '../utils/handleApiError';
 
 // Remove trailing slash from base URL if present
 const cleanBaseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
@@ -63,7 +64,7 @@ const foodService = {
       const response = await foodApi.get('');
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -73,7 +74,7 @@ const foodService = {
       const response = await foodApi.get(`/${foodId}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
   
@@ -83,7 +84,7 @@ const foodService = {
       const response = await foodApi.get(`?menu_id=${menuId}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -93,7 +94,7 @@ const foodService = {
       const response = await foodApi.post('', foodData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -103,7 +104,7 @@ const foodService = {
       const response = await foodApi.patch(`/${foodId}`, foodData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -113,7 +114,7 @@ const foodService = {
       const response = await foodApi.delete(`/${foodId}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
   

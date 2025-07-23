@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../utils/config';
+import handleApiError from '../utils/handleApiError';
 
 // Remove trailing slash from base URL if present
 const cleanBaseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
@@ -29,7 +30,7 @@ const authService = {
 
       return response.data;
     } catch (error) {
-      throw error.response?.data?.error;
+      throw handleApiError(error);
     }
   },
 
@@ -48,7 +49,7 @@ const authService = {
 
       return response.data;
     } catch (error) {
-      throw error.response?.data?.error;
+      throw handleApiError(error);
     }
   },
 

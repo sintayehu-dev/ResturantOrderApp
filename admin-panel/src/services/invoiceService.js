@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+import handleApiError from '../utils/handleApiError';
 
 // Remove trailing slash from base URL if present
 const cleanBaseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
@@ -58,7 +59,7 @@ const invoiceService = {
       const response = await invoiceApi.get('');
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -68,7 +69,7 @@ const invoiceService = {
       const response = await invoiceApi.get(`/${invoiceId}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -78,7 +79,7 @@ const invoiceService = {
       const response = await invoiceApi.post('', invoiceData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -88,7 +89,7 @@ const invoiceService = {
       const response = await invoiceApi.patch(`/${invoiceId}`, invoiceData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -98,7 +99,7 @@ const invoiceService = {
       const response = await invoiceApi.delete(`/${invoiceId}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 };

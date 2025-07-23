@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+import handleApiError from '../utils/handleApiError';
 
 // Remove trailing slash from base URL if present
 const cleanBaseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
@@ -66,7 +67,7 @@ const getAllTables = async () => {
     });
     return response.data;
   } catch (error) {
-    throw error.response?.data || error.message;
+    throw handleApiError(error);
   }
 };
 
@@ -81,7 +82,7 @@ const getAvailableTables = async () => {
     });
     return response.data;
   } catch (error) {
-    throw error.response?.data || error.message;
+    throw handleApiError(error);
   }
 };
 
@@ -94,7 +95,7 @@ const tableService = {
       const response = await tableApi.get(`/${tableId}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -104,7 +105,7 @@ const tableService = {
       const response = await tableApi.post('', tableData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -114,7 +115,7 @@ const tableService = {
       const response = await tableApi.patch(`/${tableId}`, tableData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
 
@@ -124,7 +125,7 @@ const tableService = {
       const response = await tableApi.delete(`/${tableId}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      throw handleApiError(error);
     }
   },
   
