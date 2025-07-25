@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import './MenuList.css';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
+import { useMenu } from '../../contexts/MenuContext';
 
 const hardcodedCategories = [
   "Breakfast",

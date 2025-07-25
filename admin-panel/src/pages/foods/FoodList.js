@@ -5,7 +5,6 @@ import { useMenu } from '../../contexts/MenuContext';
 import { useNavigate } from 'react-router-dom';
 import './FoodList.css'; // Reusing the same CSS for consistency
 import ConfirmDialog from '../../components/common/ConfirmDialog';
-import axios from 'axios';
 
 const FoodList = () => {
   const { foods, loading, error, fetchFoods, createFood, updateFood, deleteFood, getNextFoodId, uploadFoodImage } = useFood();
