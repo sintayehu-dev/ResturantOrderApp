@@ -8,7 +8,7 @@ func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Allow only production origin
 		origin := c.Request.Header.Get("Origin")
-		if origin == "https://kebar1.netlify.app" {
+		if origin == "https://kebar.netlify.app" {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 		}
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
