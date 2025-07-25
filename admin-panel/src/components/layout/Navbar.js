@@ -13,6 +13,11 @@ const NavigationBar = () => {
     navigate('/login');
   };
 
+  const handleProfileClick = () => {
+    navigate('/profile');
+    setShowOffcanvas(false);
+  };
+
   return (
     <Navbar bg="white" expand="lg" className="border-bottom shadow-sm">
       <Container fluid>
@@ -56,7 +61,7 @@ const NavigationBar = () => {
                   3
                 </Badge>
               </Nav.Link>
-              <Nav.Link href="#profile" className="d-flex align-items-center py-3" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
+              <Nav.Link onClick={handleProfileClick} className="d-flex align-items-center py-3" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
                 <i className="bi bi-person me-2"></i>
                 Profile
               </Nav.Link>
@@ -93,7 +98,9 @@ const NavigationBar = () => {
                 <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-2">
                   <i className="bi bi-person-circle text-primary"></i>
                 </div>
-                <span style={{ fontSize: '73.5%', fontWeight: 'bold' }}>{user?.name || 'Admin'}</span>
+                <span style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
+                  {user?.first_name ? `${user.first_name} ${user.last_name || ''}` : 'Admin'}
+                </span>
               </div>
             } 
             id="basic-nav-dropdown"
@@ -101,11 +108,13 @@ const NavigationBar = () => {
             className="custom-dropdown"
           >
             <div className="px-3 py-2 border-bottom">
-              <h6 className="mb-0" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>{user?.name || 'Admin User'}</h6>
+              <h6 className="mb-0" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
+                {user?.first_name ? `${user.first_name} ${user.last_name || ''}` : 'Admin User'}
+              </h6>
               <small className="text-muted" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>{user?.email || 'admin@example.com'}</small>
             </div>
             
-            <NavDropdown.Item href="#profile" className="d-flex align-items-center" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
+            <NavDropdown.Item onClick={handleProfileClick} className="d-flex align-items-center" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>
               <i className="bi bi-person me-2"></i>
               Profile
             </NavDropdown.Item>
