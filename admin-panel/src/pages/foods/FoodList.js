@@ -23,6 +23,7 @@ const FoodList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [foodToDelete, setFoodToDelete] = useState(null);
   const [imageUploading, setImageUploading] = useState(false);
+  const [imageUploaded, setImageUploaded] = useState(false);
 
   useEffect(() => {
     fetchFoods();
@@ -65,6 +66,7 @@ const FoodList = () => {
       menu_id: '',
     });
     setFormError('');
+    setImageUploaded(false);
   };
 
   const handleInputChange = (e) => {
@@ -97,12 +99,14 @@ const FoodList = () => {
     const file = e.target.files[0];
     if (file) {
       setImageUploading(true);
+      setImageUploaded(false);
       try {
         const imageUrl = await uploadFoodImage(file); // Uploads to backend/Cloudinary
         setFormData(prev => ({
           ...prev,
           food_image: imageUrl
         }));
+        setImageUploaded(true);
       } catch (err) {
         setFormError('Image upload failed: ' + (err.message || 'Unknown error'));
       } finally {
@@ -370,6 +374,11 @@ const FoodList = () => {
                   Uploading image...
                 </div>
               )}
+              {imageUploaded && (
+                <div style={{ marginTop: '10px', color: 'green', fontSize: '14px' }}>
+                  ✅ Image uploaded successfully!
+                </div>
+              )}
               {formData.food_image && !imageUploading && (
                 <div style={{ marginTop: '10px' }}>
                   <img
@@ -377,9 +386,6 @@ const FoodList = () => {
                     alt="Preview"
                     style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '8px' }}
                   />
-                  <div style={{ marginTop: '5px', fontSize: '12px', color: '#666', wordBreak: 'break-all' }}>
-                    <strong>Image URL:</strong> {formData.food_image}
-                  </div>
                 </div>
               )}
             </Form.Group>
