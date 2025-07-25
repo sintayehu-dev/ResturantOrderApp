@@ -86,6 +86,29 @@ export const InvoiceProvider = ({ children }) => {
     }
   }, []);
 
+  // Get next invoice ID
+  const getNextInvoiceId = useCallback(async () => {
+    try {
+      const currentInvoices = await invoiceService.getAllInvoices();
+      if (!currentInvoices || currentInvoices.length === 0) return 'INV-001';
+      
+      // Extract numbers from invoice_id like "INV-004"
+      const numbers = currentInvoices
+        .map(invoice => {
+          const match = invoice.invoice_id && invoice.invoice_id.match(/^INV-(\d+)$/);
+          return match ? parseInt(match[1], 10) : null;
+        })
+        .filter(num => num !== null);
+      
+      const max = numbers.length ? Math.max(...numbers) : 0;
+      const next = (max + 1).toString().padStart(3, '0');
+      return `INV-${next}`;
+    } catch (err) {
+      console.error('Error getting next invoice ID:', err);
+      return 'INV-001';
+    }
+  }, []);
+
   const contextValue = {
     invoices,
     loading,
@@ -95,6 +118,7 @@ export const InvoiceProvider = ({ children }) => {
     createInvoice,
     updateInvoice,
     deleteInvoice,
+    getNextInvoiceId,
   };
 
   return (

@@ -5,7 +5,7 @@ import { useOrder } from '../../contexts/OrderContext';
 import { useNavigate } from 'react-router-dom';
 
 const InvoiceList = () => {
-  const { invoices, loading, error, fetchInvoices, createInvoice, updateInvoice, deleteInvoice } = useInvoice();
+  const { invoices, loading, error, fetchInvoices, createInvoice, updateInvoice, deleteInvoice, getNextInvoiceId } = useInvoice();
   const { orders, fetchOrders, getOrderById } = useOrder();
   const [showModal, setShowModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -27,7 +27,7 @@ const InvoiceList = () => {
     fetchOrders();
   }, [fetchInvoices, fetchOrders]);
 
-  const handleShowModal = (invoice = null) => {
+  const handleShowModal = async (invoice = null) => {
     if (invoice) {
       setSelectedInvoice(invoice);
       setFormData({
@@ -40,11 +40,12 @@ const InvoiceList = () => {
       });
     } else {
       setSelectedInvoice(null);
+      const nextInvoiceId = await getNextInvoiceId();
       setFormData({
-        invoice_id: '',
+        invoice_id: nextInvoiceId,
         order_id: '',
         payment_method: '',
-        payment_status: '',
+        payment_status: 'pending',
         payment_due_date: '',
         total_amount: '',
       });
@@ -293,6 +294,9 @@ const InvoiceList = () => {
                 disabled={!!selectedInvoice}
                 style={{ fontSize: '78.75%' }}
               />
+              <Form.Text className="text-muted" style={{ fontSize: '75%' }}>
+                {selectedInvoice ? 'Invoice ID cannot be changed' : 'Auto-generated invoice ID'}
+              </Form.Text>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Order ID</Form.Label>
