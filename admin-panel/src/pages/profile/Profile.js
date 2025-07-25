@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert, Badge, Spinner } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUser } from '../../contexts/UserContext';
@@ -25,11 +25,19 @@ const Profile = () => {
     confirm_password: ''
   });
 
+  const loadUserProfile = useCallback(async () => {
+    try {
+      await getUserProfile(user.user_id);
+    } catch (err) {
+      console.error('Failed to load user profile:', err);
+    }
+  }, [user?.user_id, getUserProfile]);
+
   useEffect(() => {
     if (user?.user_id) {
       loadUserProfile();
     }
-  }, [user?.user_id]);
+  }, [user?.user_id, loadUserProfile]);
 
   useEffect(() => {
     if (userProfile) {
@@ -41,14 +49,6 @@ const Profile = () => {
       });
     }
   }, [userProfile]);
-
-  const loadUserProfile = async () => {
-    try {
-      await getUserProfile(user.user_id);
-    } catch (err) {
-      console.error('Failed to load user profile:', err);
-    }
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
