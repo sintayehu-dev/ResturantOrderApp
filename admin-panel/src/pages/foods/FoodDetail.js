@@ -7,7 +7,7 @@ import { useMenu } from '../../contexts/MenuContext';
 const FoodDetail = () => {
   const { foodId } = useParams();
   const navigate = useNavigate();
-  const { getFoodById, updateFood, deleteFood, loading, error } = useFood();
+  const { getFoodById, updateFood, deleteFood, loading, error, uploadFoodImage } = useFood();
   const { menus, fetchMenus } = useMenu();
   const [food, setFood] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -19,6 +19,8 @@ const FoodDetail = () => {
     menu_id: '',
   });
   const [formError, setFormError] = useState('');
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imageUploaded, setImageUploaded] = useState(false);
 
   useEffect(() => {
     const fetchFoodDetails = async () => {
@@ -66,6 +68,26 @@ const FoodDetail = () => {
     }
   };
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageUploading(true);
+      setImageUploaded(false);
+      try {
+        const imageUrl = await uploadFoodImage(file); // Uploads to backend/Cloudinary
+        setFormData(prev => ({
+          ...prev,
+          food_image: imageUrl
+        }));
+        setImageUploaded(true);
+      } catch (err) {
+        setFormError('Image upload failed: ' + (err.message || 'Unknown error'));
+      } finally {
+        setImageUploading(false);
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -87,6 +109,11 @@ const FoodDetail = () => {
         return;
       }
       
+      if (!formData.food_image) {
+        setFormError('Please upload an image or keep the existing one.');
+        return;
+      }
+      
       const payload = {
         food_id: food.food_id,
         name: formData.name,
@@ -98,6 +125,7 @@ const FoodDetail = () => {
       const updatedFood = await updateFood(foodId, payload);
       setFood(updatedFood);
       setShowEditModal(false);
+      setImageUploaded(false);
     } catch (err) {
       setFormError(err.message || 'Failed to update food item');
     }
@@ -305,18 +333,36 @@ const FoodDetail = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Image URL</Form.Label>
+              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Image File</Form.Label>
               <Form.Control
-                type="text"
-                name="food_image"
-                value={formData.food_image}
-                onChange={handleInputChange}
-                placeholder="Enter image path or URL"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={imageUploading}
                 style={{ fontSize: '78.75%' }}
               />
               <Form.Text className="text-muted" style={{ fontSize: '75%' }}>
-                Example: /images/foods/pizza.jpg
+                Upload a new image or keep the existing one
               </Form.Text>
+              {imageUploading && (
+                <div style={{ marginTop: '10px', color: 'blue', fontSize: '78.75%' }}>
+                  Uploading image...
+                </div>
+              )}
+              {imageUploaded && (
+                <div style={{ marginTop: '10px', color: 'green', fontSize: '78.75%' }}>
+                  ✅ Image uploaded successfully!
+                </div>
+              )}
+              {formData.food_image && !imageUploading && (
+                <div style={{ marginTop: '10px' }}>
+                  <img
+                    src={formData.food_image}
+                    alt="Preview"
+                    style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '8px' }}
+                  />
+                </div>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3">
