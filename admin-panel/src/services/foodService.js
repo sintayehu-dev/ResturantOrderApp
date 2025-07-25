@@ -61,10 +61,17 @@ const uploadFoodImage = async (file) => {
   try {
     const formData = new FormData();
     formData.append('food_image', file);
+    const token = getAuthToken();
+    const headers = {
+      'Content-Type': 'multipart/form-data'
+    };
+    if (token) {
+      headers.Authorization = token;
+    }
     const response = await axios.post(
       `${cleanBaseUrl}/foods/upload-image`,
       formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } }
+      { headers }
     );
     return response.data.image_url;
   } catch (error) {
