@@ -22,7 +22,6 @@ const FoodList = () => {
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [foodToDelete, setFoodToDelete] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
   const [imageUploading, setImageUploading] = useState(false);
 
   useEffect(() => {
@@ -96,7 +95,6 @@ const FoodList = () => {
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    setSelectedImage(file);
     if (file) {
       setImageUploading(true);
       try {
