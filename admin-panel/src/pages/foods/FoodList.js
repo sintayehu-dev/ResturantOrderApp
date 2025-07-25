@@ -337,6 +337,7 @@ const FoodList = () => {
               </InputGroup>
             </Form.Group>
 
+            {/* Remove the text input for Image URL and keep only the file input */}
             <Form.Group className="mb-3">
               <Form.Label>Image File</Form.Label>
               <Form.Control
@@ -348,6 +349,16 @@ const FoodList = () => {
               <Form.Text className="text-muted">
                 Upload a food image (jpg, png, etc.)
               </Form.Text>
+              {/* Optional: Show image preview */}
+              {selectedImage && (
+                <div style={{ marginTop: '10px' }}>
+                  <img
+                    src={URL.createObjectURL(selectedImage)}
+                    alt="Preview"
+                    style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '8px' }}
+                  />
+                </div>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3">
