@@ -23,6 +23,7 @@ const FoodList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [foodToDelete, setFoodToDelete] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [imageUploading, setImageUploading] = useState(false);
 
   useEffect(() => {
     fetchFoods();
@@ -93,34 +94,46 @@ const FoodList = () => {
     }
   };
 
-  const handleImageChange = (e) => {
-    setSelectedImage(e.target.files[0]);
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+    if (file) {
+      setImageUploading(true);
+      try {
+        const imageUrl = await uploadFoodImage(file); // Uploads to backend/Cloudinary
+        setFormData(prev => ({
+          ...prev,
+          food_image: imageUrl
+        }));
+      } catch (err) {
+        setFormError('Image upload failed: ' + (err.message || 'Unknown error'));
+      } finally {
+        setImageUploading(false);
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setFormError('');
-      // Validate price
       if (parseFloat(formData.price) < 0) {
         setFormError('Price must be a positive number');
         return;
       }
-      // Validate required fields
       if (!formData.name || !formData.menu_id) {
         setFormError('Please fill in all required fields');
         return;
       }
-      // Handle image upload
-      let imageUrl = '';
-      if (selectedImage) {
-        imageUrl = await uploadFoodImage(selectedImage);
+      if (!formData.food_image) {
+        setFormError('Please upload an image before submitting.');
+        return;
       }
       const payload = {
         food_id: formData.food_id,
         name: formData.name,
         price: parseFloat(formData.price),
-        food_image: imageUrl,
+        food_image: formData.food_image, // Already Cloudinary URL
         menu_id: formData.menu_id,
       };
       if (selectedFood) {
@@ -344,18 +357,26 @@ const FoodList = () => {
                 accept="image/*"
                 onChange={handleImageChange}
                 required={!selectedFood}
+                disabled={imageUploading}
               />
               <Form.Text className="text-muted">
                 Upload a food image (jpg, png, etc.)
               </Form.Text>
-              {/* Optional: Show image preview */}
-              {selectedImage && (
+              {imageUploading && (
+                <div style={{ marginTop: '10px', color: 'blue' }}>
+                  Uploading image...
+                </div>
+              )}
+              {formData.food_image && !imageUploading && (
                 <div style={{ marginTop: '10px' }}>
                   <img
-                    src={URL.createObjectURL(selectedImage)}
+                    src={formData.food_image}
                     alt="Preview"
                     style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '8px' }}
                   />
+                  <div style={{ marginTop: '5px', fontSize: '12px', color: '#666', wordBreak: 'break-all' }}>
+                    <strong>Image URL:</strong> {formData.food_image}
+                  </div>
                 </div>
               )}
             </Form.Group>
