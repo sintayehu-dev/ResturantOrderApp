@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../utils/config';
 import handleApiError from '../utils/handleApiError';
 
 // Remove trailing slash from base URL if present
