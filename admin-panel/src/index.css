@@ -98,6 +98,75 @@ code {
   color: #2563eb;
 }
 
+/* Navbar dropdown styling */
+.navbar .dropdown-menu {
+  border: none;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
+  padding: 0;
+  margin-top: 0.5rem;
+  min-width: 200px;
+  z-index: 1050;
+}
+
+.navbar .dropdown-item {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  transition: all 0.2s ease-in-out;
+}
+
+.navbar .dropdown-item:hover {
+  background-color: #f8fafc;
+  color: #2563eb;
+}
+
+.navbar .dropdown-item.text-danger:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.navbar .dropdown-divider {
+  margin: 0.5rem 0;
+  border-color: #e5e7eb;
+}
+
+/* Ensure dropdown is not cut off */
+.navbar .dropdown {
+  position: relative;
+}
+
+.navbar .dropdown-menu.show {
+  display: block;
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Fix container overflow issues */
+.navbar .container-fluid {
+  overflow: visible;
+}
+
+.navbar .d-none.d-lg-flex {
+  overflow: visible;
+}
+
+/* Ensure main content doesn't interfere with dropdown */
+main {
+  overflow: visible;
+}
+
+/* Fix any potential z-index conflicts */
+.navbar {
+  z-index: 1030;
+}
+
+.navbar .dropdown-menu {
+  z-index: 1050;
+}
+
 /* Form styling */
 .form-control {
   border-radius: 0.75rem;
