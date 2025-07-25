@@ -117,12 +117,22 @@ const InvoiceList = () => {
       setFormError('Total amount must be a number');
       return;
     }
+
+    // Format the date properly for the backend
+    let formattedDueDate = formData.payment_due_date;
+    if (formData.payment_due_date) {
+      const date = new Date(formData.payment_due_date);
+      if (!isNaN(date.getTime())) {
+        formattedDueDate = date.toISOString();
+      }
+    }
+
     const payload = {
       invoice_id: formData.invoice_id,
       order_id: formData.order_id,
       payment_method: formData.payment_method,
       payment_status: formData.payment_status,
-      payment_due_date: formData.payment_due_date,
+      payment_due_date: formattedDueDate,
       total_amount: parseFloat(formData.total_amount),
     };
     try {
