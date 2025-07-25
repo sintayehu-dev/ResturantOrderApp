@@ -123,8 +123,13 @@ const FoodList = () => {
         setFormError('Please fill in all required fields');
         return;
       }
-      if (!formData.food_image) {
+      // For new food items, require an image. For editing, allow keeping existing image
+      if (!selectedFood && !formData.food_image) {
         setFormError('Please upload an image before submitting.');
+        return;
+      }
+      if (selectedFood && !formData.food_image) {
+        setFormError('Please upload an image or keep the existing one.');
         return;
       }
       const payload = {
@@ -354,11 +359,11 @@ const FoodList = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                required={!selectedFood}
+                required={!selectedFood} // Only required for new items
                 disabled={imageUploading}
               />
               <Form.Text className="text-muted">
-                Upload a food image (jpg, png, etc.)
+                {selectedFood ? 'Upload a new image or keep the existing one' : 'Upload a food image (jpg, png, etc.)'}
               </Form.Text>
               {imageUploading && (
                 <div style={{ marginTop: '10px', color: 'blue' }}>
