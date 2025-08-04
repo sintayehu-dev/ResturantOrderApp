@@ -38,7 +38,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		}
 
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, token")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, token, postman-token")
 		c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE, PATCH")
 
@@ -83,13 +83,14 @@ func getAllowedOrigins() []string {
 		}
 	default: // development
 		return []string{
-			"https://kebar.netlify.app", // Production web admin
-			"http://localhost:3000",     // Local React development
-			"http://localhost:3001",     // Alternative local port
-			"http://localhost:8080",     // Local Go server
-			"chrome-extension://*",      // Postman Chrome extension
-			"moz-extension://*",         // Postman Firefox extension
-			"*",                         // Allow all origins for development (remove in production)
+			"https://kebar.netlify.app",                 // Production web admin
+			"http://localhost:3000",                     // Local React development
+			"http://localhost:3001",                     // Alternative local port
+			"http://localhost:8080",                     // Local Go server
+			"chrome-extension://*",                      // Postman Chrome extension
+			"moz-extension://*",                         // Postman Firefox extension
+			"https://galactic-crater-913321.postman.co", // Postman web app
+			"*", // Allow all origins for development (remove in production)
 		}
 	}
 }
