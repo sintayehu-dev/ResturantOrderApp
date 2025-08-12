@@ -62,7 +62,7 @@ const Sidebar = ({ isMobile, show, onHide }) => {
   const SidebarContent = () => (
     <>
       <div className="p-4 border-bottom border-secondary">
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center justify-content-between">
           <div className="flex-shrink-0">
             <div className="bg-primary bg-opacity-10 rounded-circle p-2">
               <i className="bi bi-shop text-primary fs-4"></i>
@@ -74,6 +74,15 @@ const Sidebar = ({ isMobile, show, onHide }) => {
               <small className="text-white-50" style={{ fontSize: '73.5%', fontWeight: 'bold' }}>Management System</small>
             </div>
           )}
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-light border-0 ms-2 d-none d-lg-inline-flex"
+            onClick={() => setIsCollapsed((prev) => !prev)}
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={isCollapsed ? 'Expand' : 'Collapse'}
+          >
+            <i className={`bi ${isCollapsed ? 'bi-chevron-double-right' : 'bi-chevron-double-left'}`}></i>
+          </button>
         </div>
       </div>
 

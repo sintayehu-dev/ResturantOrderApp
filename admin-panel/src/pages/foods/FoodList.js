@@ -185,108 +185,211 @@ const FoodList = () => {
 
   if (loading) {
     return (
-      <Container className="py-4">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
+      <div className="page-container">
+        <div className="loading-state">
+          <div className="loading-spinner">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3 text-muted">Loading food items...</p>
           </div>
         </div>
-      </Container>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Container className="py-4">
-        <Alert variant="danger">{error}</Alert>
-      </Container>
+      <div className="page-container">
+        <div className="error-state">
+          <Alert variant="danger" className="error-alert">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            {error}
+          </Alert>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Container fluid className="p-4 menu-list-container">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h3 mb-0 page-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Food Management</h1>
-        <Button variant="primary" onClick={() => handleShowModal()} className="action-button" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>
-          <i className="bi bi-plus-lg me-2"></i>
-          Add New Food
-        </Button>
+    <div className="page-container">
+      {/* Page Header */}
+      <div className="page-header">
+        <div className="header-content">
+          <div className="header-text">
+            <h1 className="page-title">
+              <i className="bi bi-egg-fried me-3 text-primary"></i>
+              Food Management
+            </h1>
+            <p className="page-subtitle">
+              Manage your restaurant's food items, prices, and menu assignments
+            </p>
+          </div>
+          <div className="header-actions">
+            <Button 
+              variant="primary" 
+              onClick={() => handleShowModal()} 
+              className="primary-action-btn"
+              size="lg"
+            >
+              <i className="bi bi-plus-lg me-2"></i>
+              Add New Food
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <Card className="menu-card">
-        <Card.Body>
+      {/* Stats Summary */}
+      <div className="stats-summary mb-4">
+        <div className="stats-grid">
+          <div className="stat-item">
+            <div className="stat-icon stat-icon-primary">
+              <i className="bi bi-egg-fried"></i>
+            </div>
+            <div className="stat-content">
+              <div className="stat-number">{foods.length}</div>
+              <div className="stat-label">Total Food Items</div>
+            </div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-icon stat-icon-success">
+              <i className="bi bi-menu-button-wide"></i>
+            </div>
+            <div className="stat-content">
+              <div className="stat-number">{menus.length}</div>
+              <div className="stat-label">Available Menus</div>
+            </div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-icon stat-icon-info">
+              <i className="bi bi-currency-dollar"></i>
+            </div>
+            <div className="stat-content">
+              <div className="stat-number">
+                {formatPrice(foods.reduce((total, food) => total + (parseFloat(food.price) || 0), 0))}
+              </div>
+              <div className="stat-label">Total Value</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <Card className="content-card">
+        <Card.Header className="content-card-header">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="header-content">
+              <h5 className="card-title mb-1">
+                <i className="bi bi-list-ul me-2 text-primary"></i>
+                Food Items List
+              </h5>
+              <p className="text-muted mb-0">All available food items in your restaurant</p>
+            </div>
+            <div className="header-actions">
+              <Button variant="outline-primary" size="sm" className="export-btn">
+                <i className="bi bi-download me-2"></i>
+                Export
+              </Button>
+            </div>
+          </div>
+        </Card.Header>
+        <Card.Body className="p-0">
           <div className="table-responsive">
-            <Table hover className="align-middle menu-table">
-              <thead>
+            <Table className="modern-table">
+              <thead className="table-header">
                 <tr>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Food ID</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Image</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Name</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Price</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Menu</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Actions</th>
+                  <th>Food ID</th>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Menu</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {foods.map((food) => {
-                  const menuItem = menus.find(menu => menu.menu_id === food.menu_id);
-                  
-                  return (
-                    <tr key={food.food_id}>
-                      <td>
-                        <Button
-                          variant="link"
-                          className="p-0 text-decoration-none menu-link"
-                          onClick={() => navigate(`/foods/${food.food_id}`)}
+                {foods.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="text-center py-5">
+                      <div className="empty-state">
+                        <i className="bi bi-egg-fried text-muted fs-1"></i>
+                        <p className="mt-3 text-muted">No food items found</p>
+                        <Button 
+                          variant="outline-primary" 
+                          size="sm"
+                          onClick={() => handleShowModal()}
                         >
-                          {food.food_id}
+                          Add First Food Item
                         </Button>
-                      </td>
-                      <td>
-                        <img 
-                          src={food.food_image || '/images/foods/default.jpg'} 
-                          alt={food.name}
-                          style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
-                        />
-                      </td>
-                      <td className="menu-item-text">{food.name}</td>
-                      <td className="menu-item-text">{formatPrice(food.price)}</td>
-                      <td>
-                        {menuItem ? (
-                          <Badge bg="info" className="text-capitalize category-badge">
-                            {menuItem.name}
-                          </Badge>
-                        ) : (
-                          <Badge bg="secondary" className="category-badge">
-                            No Menu
-                          </Badge>
-                        )}
-                      </td>
-                      <td>
-                        <div className="d-flex gap-2">
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  foods.map((food) => {
+                    const menuItem = menus.find(menu => menu.menu_id === food.menu_id);
+                    
+                    return (
+                      <tr key={food.food_id} className="data-row">
+                        <td>
                           <Button
-                            variant="outline-primary"
-                            size="sm"
-                            onClick={() => handleShowModal(food)}
-                            className="action-icon-btn edit-btn"
-                            style={{ fontSize: '78.75%' }}
+                            variant="link"
+                            className="p-0 text-decoration-none item-link"
+                            onClick={() => navigate(`/foods/${food.food_id}`)}
                           >
-                            <i className="bi bi-pencil"></i>
+                            <span className="item-id">#{food.food_id}</span>
                           </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleDelete(food.food_id)}
-                            className="action-icon-btn delete-btn"
-                            style={{ fontSize: '78.75%' }}
-                          >
-                            <i className="bi bi-trash"></i>
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                        </td>
+                        <td>
+                          <div className="food-image-wrapper">
+                            <img 
+                              src={food.food_image || '/images/foods/default.jpg'} 
+                              alt={food.name}
+                              className="food-image"
+                            />
+                          </div>
+                        </td>
+                        <td>
+                          <div className="food-name">{food.name}</div>
+                        </td>
+                        <td>
+                          <div className="food-price">{formatPrice(food.price)}</div>
+                        </td>
+                        <td>
+                          {menuItem ? (
+                            <Badge className="menu-badge menu-badge-info">
+                              {menuItem.name}
+                            </Badge>
+                          ) : (
+                            <Badge className="menu-badge menu-badge-secondary">
+                              No Menu
+                            </Badge>
+                          )}
+                        </td>
+                        <td>
+                          <div className="action-buttons">
+                            <Button
+                              variant="outline-primary"
+                              size="sm"
+                              onClick={() => handleShowModal(food)}
+                              className="action-btn edit-btn"
+                              title="Edit Food Item"
+                            >
+                              <i className="bi bi-pencil"></i>
+                            </Button>
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              onClick={() => handleDelete(food.food_id)}
+                              className="action-btn delete-btn"
+                              title="Delete Food Item"
+                            >
+                              <i className="bi bi-trash"></i>
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </Table>
           </div>
@@ -294,22 +397,24 @@ const FoodList = () => {
       </Card>
 
       {/* Add/Edit Food Modal */}
-      <Modal show={showModal} onHide={handleCloseModal} centered className="menu-modal">
-        <Modal.Header closeButton>
-          <Modal.Title className="modal-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+      <Modal show={showModal} onHide={handleCloseModal} centered className="modern-modal">
+        <Modal.Header closeButton className="modal-header">
+          <Modal.Title className="modal-title">
+            <i className={`bi ${selectedFood ? 'bi-pencil-square' : 'bi-plus-circle'} me-2 text-primary`}></i>
             {selectedFood ? 'Edit Food Item' : 'Add New Food Item'}
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
-          <Modal.Body>
+          <Modal.Body className="modal-body">
             {formError && (
-              <Alert variant="danger" className="mb-3 form-error" style={{ fontSize: '78.75%' }}>
+              <Alert variant="danger" className="form-error-alert">
+                <i className="bi bi-exclamation-triangle me-2"></i>
                 {formError}
               </Alert>
             )}
 
-            <Form.Group className="mb-3">
-              <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>Food ID</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Food ID</Form.Label>
               <Form.Control
                 type="text"
                 name="food_id"
@@ -317,14 +422,13 @@ const FoodList = () => {
                 onChange={handleInputChange}
                 required
                 placeholder="Enter food ID"
-                className="form-input"
+                className="form-control-modern"
                 disabled={!!selectedFood}
-                style={{ fontSize: '78.75%' }}
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>Food Name</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Food Name</Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -332,15 +436,14 @@ const FoodList = () => {
                 onChange={handleInputChange}
                 required
                 placeholder="Enter food name"
-                className="form-input"
-                style={{ fontSize: '78.75%' }}
+                className="form-control-modern"
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>Price</Form.Label>
-              <InputGroup>
-                <InputGroup.Text>$</InputGroup.Text>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Price</Form.Label>
+              <InputGroup className="input-group-modern">
+                <InputGroup.Text className="input-group-text-modern">$</InputGroup.Text>
                 <Form.Control
                   type="number"
                   step="0.01"
@@ -350,57 +453,60 @@ const FoodList = () => {
                   onChange={handleInputChange}
                   required
                   placeholder="0.00"
-                  className="form-input"
-                  style={{ fontSize: '78.75%' }}
+                  className="form-control-modern"
                 />
               </InputGroup>
             </Form.Group>
 
-            {/* Remove the text input for Image URL and keep only the file input */}
-            <Form.Group className="mb-3">
-              <Form.Label>Image File</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Food Image</Form.Label>
               <Form.Control
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                required={!selectedFood} // Only required for new items
+                required={!selectedFood}
                 disabled={imageUploading}
+                className="form-control-modern file-input"
               />
-              <Form.Text className="text-muted">
+              <Form.Text className="form-text-modern">
                 {selectedFood ? 'Upload a new image or keep the existing one' : 'Upload a food image (jpg, png, etc.)'}
               </Form.Text>
+              
               {imageUploading && (
-                <div style={{ marginTop: '10px', color: 'blue' }}>
+                <div className="upload-status uploading">
+                  <i className="bi bi-arrow-clockwise spin"></i>
                   Uploading image...
                 </div>
               )}
+              
               {imageUploaded && (
-                <div style={{ marginTop: '10px', color: 'green', fontSize: '14px' }}>
-                  ✅ Image uploaded successfully!
+                <div className="upload-status success">
+                  <i className="bi bi-check-circle"></i>
+                  Image uploaded successfully!
                 </div>
               )}
+              
               {formData.food_image && !imageUploading && (
-                <div style={{ marginTop: '10px' }}>
+                <div className="image-preview">
                   <img
                     src={formData.food_image}
                     alt="Preview"
-                    style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '8px' }}
+                    className="preview-image"
                   />
                 </div>
               )}
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label className="form-label" style={{ fontSize: '78.75%', fontWeight: '500' }}>Menu</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Menu Category</Form.Label>
               <Form.Select
                 name="menu_id"
                 value={formData.menu_id}
                 onChange={handleInputChange}
                 required
-                className="form-select"
-                style={{ fontSize: '78.75%' }}
+                className="form-select-modern"
               >
-                <option value="">Select a menu</option>
+                <option value="">Select a menu category</option>
                 {menus.map((menu) => (
                   <option key={menu.menu_id} value={menu.menu_id}>
                     {menu.name} ({menu.category})
@@ -409,12 +515,20 @@ const FoodList = () => {
               </Form.Select>
             </Form.Group>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="outline-secondary" onClick={handleCloseModal} className="cancel-button d-flex align-items-center" style={{ fontSize: '78.75%' }}>
+          <Modal.Footer className="modal-footer">
+            <Button 
+              variant="outline-secondary" 
+              onClick={handleCloseModal} 
+              className="cancel-btn"
+            >
               <i className="bi bi-x-circle me-2"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" className="submit-button d-flex align-items-center" style={{ fontSize: '78.75%' }}>
+            <Button 
+              variant="primary" 
+              type="submit" 
+              className="submit-btn"
+            >
               <i className={`bi ${selectedFood ? 'bi-check2-circle' : 'bi-plus-circle'} me-2`}></i>
               {selectedFood ? 'Update Food Item' : 'Create Food Item'}
             </Button>
@@ -427,12 +541,12 @@ const FoodList = () => {
         show={showDeleteModal}
         onHide={cancelDelete}
         onConfirm={confirmDelete}
-        title="Delete Food"
-        message="Are you sure you want to delete this food item?"
-        confirmText="Yes"
-        cancelText="No"
+        title="Delete Food Item"
+        message="Are you sure you want to delete this food item? This action cannot be undone."
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
       />
-    </Container>
+    </div>
   );
 };
 

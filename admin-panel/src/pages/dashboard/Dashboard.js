@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOrder } from '../../contexts/OrderContext';
 import { useNavigate } from 'react-router-dom';
@@ -70,164 +70,245 @@ const Dashboard = () => {
   };
 
   return (
-    <Container fluid className="p-3 p-md-4 fade-in">
-      {/* Header Section */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-        <div>
-          <h1 className="h3 mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Welcome back, {user?.name || 'Admin'}!</h1>
-          <p className="text-muted mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Here's what's happening with your restaurant today.</p>
-        </div>
-        <div className="d-flex gap-2 w-100 w-md-auto">
-          <Button variant="outline-primary" className="d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0">
-            <i className="bi bi-download"></i>
-            <span className="d-none d-sm-inline" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Export Report</span>
-          </Button>
-          <Button 
-            variant="primary" 
-            className="d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0"
-            onClick={handleNewOrder}
-          >
-            <i className="bi bi-plus-lg"></i>
-            <span className="d-none d-sm-inline" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>New Order</span>
-          </Button>
+    <div className="dashboard-container">
+      {/* Hero Section */}
+      <div className="dashboard-hero mb-4">
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1 className="hero-title">
+              Welcome back, <span className="text-gradient">{user?.name || 'Admin'}</span>! 👋
+            </h1>
+            <p className="hero-subtitle">
+              Here's what's happening with your restaurant today. Stay on top of orders, revenue, and table management.
+            </p>
+          </div>
+          <div className="hero-actions">
+            <Button 
+              variant="outline-primary" 
+              className="hero-btn hero-btn-outline"
+              size="lg"
+            >
+              <i className="bi bi-download me-2"></i>
+              Export Report
+            </Button>
+            <Button 
+              variant="primary" 
+              className="hero-btn hero-btn-primary"
+              size="lg"
+              onClick={handleNewOrder}
+            >
+              <i className="bi bi-plus-lg me-2"></i>
+              New Order
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <Row className="g-3 g-md-4 mb-4">
+      <Row className="g-4 mb-5">
         {/* Total Orders Card */}
-        <Col xs={12} sm={6} md={4}>
-          <div className="dashboard-card bg-primary text-white h-100">
-            <div className="card-body p-3 p-md-4">
-              <div className="d-flex justify-content-between align-items-start mb-3">
-                <div>
-                  <h6 className="card-title mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Total Orders</h6>
-                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>{orders?.length || 0}</h2>
+        <Col xs={12} sm={6} lg={3}>
+          <Card className="stat-card stat-card-primary h-100">
+            <Card.Body className="p-4">
+              <div className="stat-card-header">
+                <div className="stat-icon-wrapper stat-icon-primary">
+                  <i className="bi bi-cart-check"></i>
                 </div>
-                <div className="bg-white bg-opacity-20 rounded-circle p-2 p-md-3">
-                  <i className="bi bi-cart text-white fs-4"></i>
+                <div className="stat-trend stat-trend-up">
+                  <i className="bi bi-arrow-up"></i>
+                  <span>12%</span>
                 </div>
               </div>
-              <div className="d-flex align-items-center">
-                <span className="badge bg-white bg-opacity-20 me-2">
-                  <i className="bi bi-arrow-up me-1"></i>
-                  {/* Placeholder - could calculate from actual data */}
-                  12%
-                </span>
-                <small className="text-white-50" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>from last month</small>
+              <div className="stat-content">
+                <h3 className="stat-number">{orders?.length || 0}</h3>
+                <p className="stat-label">Total Orders</p>
+                <div className="stat-meta">
+                  <span className="stat-period">vs last month</span>
+                </div>
               </div>
-            </div>
-          </div>
+            </Card.Body>
+          </Card>
         </Col>
 
         {/* Revenue Card */}
-        <Col xs={12} sm={6} md={4}>
-          <div className="dashboard-card bg-success text-white h-100">
-            <div className="card-body p-3 p-md-4">
-              <div className="d-flex justify-content-between align-items-start mb-3">
-                <div>
-                  <h6 className="card-title mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Revenue</h6>
-                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>
-                    {formatPrice(orders?.reduce((total, order) => total + (parseFloat(order.order_total) || 0), 0) || 0)}
-                  </h2>
+        <Col xs={12} sm={6} lg={3}>
+          <Card className="stat-card stat-card-success h-100">
+            <Card.Body className="p-4">
+              <div className="stat-card-header">
+                <div className="stat-icon-wrapper stat-icon-success">
+                  <i className="bi bi-currency-dollar"></i>
                 </div>
-                <div className="bg-white bg-opacity-20 rounded-circle p-2 p-md-3">
-                  <i className="bi bi-currency-dollar text-white fs-4"></i>
+                <div className="stat-trend stat-trend-up">
+                  <i className="bi bi-arrow-up"></i>
+                  <span>8%</span>
                 </div>
               </div>
-              <div className="d-flex align-items-center">
-                <span className="badge bg-white bg-opacity-20 me-2">
-                  <i className="bi bi-arrow-up me-1"></i>
-                  8%
-                </span>
-                <small className="text-white-50" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>from last month</small>
+              <div className="stat-content">
+                <h3 className="stat-number">
+                  {formatPrice(orders?.reduce((total, order) => total + (parseFloat(order.order_total) || 0), 0) || 0)}
+                </h3>
+                <p className="stat-label">Total Revenue</p>
+                <div className="stat-meta">
+                  <span className="stat-period">vs last month</span>
+                </div>
               </div>
-            </div>
-          </div>
+            </Card.Body>
+          </Card>
         </Col>
 
         {/* Active Tables Card */}
-        <Col xs={12} sm={6} md={4}>
-          <div className="dashboard-card bg-info text-white h-100">
-            <div className="card-body p-3 p-md-4">
-              <div className="d-flex justify-content-between align-items-start mb-3">
-                <div>
-                  <h6 className="card-title mb-1" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Active Tables</h6>
-                  <h2 className="display-6 display-md-4 mb-0" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>8/12</h2>
+        <Col xs={12} sm={6} lg={3}>
+          <Card className="stat-card stat-card-info h-100">
+            <Card.Body className="p-4">
+              <div className="stat-card-header">
+                <div className="stat-icon-wrapper stat-icon-info">
+                  <i className="bi bi-grid-3x3-gap"></i>
                 </div>
-                <div className="bg-white bg-opacity-20 rounded-circle p-2 p-md-3">
-                  <i className="bi bi-grid-3x3 text-white fs-4"></i>
+                <div className="stat-trend stat-trend-live">
+                  <i className="bi bi-circle-fill"></i>
+                  <span>Live</span>
                 </div>
               </div>
-              <div className="d-flex align-items-center">
-                <span className="badge bg-white bg-opacity-20 me-2">
-                  <i className="bi bi-clock me-1"></i>
-                  Live
-                </span>
-                <small className="text-white-50" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>Updated just now</small>
+              <div className="stat-content">
+                <h3 className="stat-number">8/12</h3>
+                <p className="stat-label">Active Tables</p>
+                <div className="stat-meta">
+                  <span className="stat-period">Updated just now</span>
+                </div>
               </div>
-            </div>
-          </div>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Average Order Value Card */}
+        <Col xs={12} sm={6} lg={3}>
+          <Card className="stat-card stat-card-warning h-100">
+            <Card.Body className="p-4">
+              <div className="stat-card-header">
+                <div className="stat-icon-wrapper stat-icon-warning">
+                  <i className="bi bi-graph-up"></i>
+                </div>
+                <div className="stat-trend stat-trend-up">
+                  <i className="bi bi-arrow-up"></i>
+                  <span>15%</span>
+                </div>
+              </div>
+              <div className="stat-content">
+                <h3 className="stat-number">
+                  {orders?.length > 0 
+                    ? formatPrice(orders.reduce((total, order) => total + (parseFloat(order.order_total) || 0), 0) / orders.length)
+                    : '$0.00'
+                  }
+                </h3>
+                <p className="stat-label">Avg Order Value</p>
+                <div className="stat-meta">
+                  <span className="stat-period">vs last month</span>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
 
-      {/* Main Content */}
-      <Row className="g-3 g-md-4">
+      {/* Main Content Grid */}
+      <Row className="g-4">
         {/* Recent Orders */}
         <Col lg={8}>
-          <Card className="h-100">
-            <Card.Body className="p-3 p-md-4">
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <h5 className="card-title mb-0" style={{ fontSize: '78.75%', fontWeight: '500' }}>Recent Orders</h5>
+          <Card className="content-card h-100">
+            <Card.Header className="content-card-header">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="header-content">
+                  <h5 className="card-title mb-1">
+                    <i className="bi bi-clock-history me-2 text-primary"></i>
+                    Recent Orders
+                  </h5>
+                  <p className="text-muted mb-0">Latest 5 orders from your restaurant</p>
+                </div>
                 <Button 
                   variant="link" 
-                  className="text-decoration-none p-0" 
-                  style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+                  className="view-all-btn"
                   onClick={() => navigate('/orders')}
                 >
                   View All
+                  <i className="bi bi-arrow-right ms-1"></i>
                 </Button>
               </div>
+            </Card.Header>
+            <Card.Body className="p-0">
               <div className="table-responsive">
-                <table className="table table-hover align-middle mb-0">
-                  <thead>
+                <table className="table table-hover mb-0 modern-table">
+                  <thead className="table-header">
                     <tr>
-                      <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Order ID</th>
-                      <th className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: '500' }}>Table</th>
-                      <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Date</th>
-                      <th className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: '500' }}>Amount</th>
-                      <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Status</th>
+                      <th>Order ID</th>
+                      <th className="d-none d-md-table-cell">Table</th>
+                      <th>Date</th>
+                      <th className="d-none d-md-table-cell">Amount</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {loading ? (
-                    <tr>
-                        <td colSpan="5" className="text-center">
-                          <div className="spinner-border spinner-border-sm text-primary" role="status">
-                            <span className="visually-hidden">Loading...</span>
+                      <tr>
+                        <td colSpan="5" className="text-center py-5">
+                          <div className="loading-spinner">
+                            <div className="spinner-border text-primary" role="status">
+                              <span className="visually-hidden">Loading...</span>
+                            </div>
+                            <p className="mt-2 text-muted">Loading orders...</p>
                           </div>
                         </td>
-                    </tr>
+                      </tr>
                     ) : recentOrders.length > 0 ? (
                       recentOrders.map((order) => (
-                        <tr key={order.order_id} style={{cursor: 'pointer'}} onClick={() => navigate(`/orders/${order.order_id}`)}>
-                          <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{order.order_id}</td>
-                          <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{order.table_id}</td>
-                          <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{formatDate(order.created_at)}</td>
-                          <td className="d-none d-md-table-cell" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{formatPrice(order.order_total)}</td>
-                          <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>
-                            <span className={`badge ${getStatusBadge(order.order_status)}`}>
-                              {order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1)}
-                            </span>
+                        <tr 
+                          key={order.order_id} 
+                          className="order-row"
+                          onClick={() => navigate(`/orders/${order.order_id}`)}
+                        >
+                          <td>
+                            <div className="order-id">
+                              <span className="order-number">#{order.order_id}</span>
+                            </div>
                           </td>
-                    </tr>
+                          <td className="d-none d-md-table-cell">
+                            <div className="table-info">
+                              <i className="bi bi-grid-3x3 me-2 text-muted"></i>
+                              Table {order.table_id}
+                            </div>
+                          </td>
+                          <td>
+                            <div className="order-date">
+                              {formatDate(order.created_at)}
+                            </div>
+                          </td>
+                          <td className="d-none d-md-table-cell">
+                            <div className="order-amount">
+                              <span className="amount-text">{formatPrice(order.order_total)}</span>
+                            </div>
+                          </td>
+                          <td>
+                            <Badge className={`status-badge ${getStatusBadge(order.order_status)}`}>
+                              {order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1)}
+                            </Badge>
+                          </td>
+                        </tr>
                       ))
                     ) : (
-                    <tr>
-                        <td colSpan="5" className="text-center py-3" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>
-                          No recent orders found
+                      <tr>
+                        <td colSpan="5" className="text-center py-5">
+                          <div className="empty-state">
+                            <i className="bi bi-inbox text-muted fs-1"></i>
+                            <p className="mt-3 text-muted">No recent orders found</p>
+                            <Button 
+                              variant="outline-primary" 
+                              size="sm"
+                              onClick={handleNewOrder}
+                            >
+                              Create First Order
+                            </Button>
+                          </div>
                         </td>
-                    </tr>
+                      </tr>
                     )}
                   </tbody>
                 </table>
@@ -236,39 +317,92 @@ const Dashboard = () => {
           </Card>
         </Col>
 
-        {/* Quick Actions */}
+        {/* Quick Actions & Insights */}
         <Col lg={4}>
-          <Card className="h-100">
-            <Card.Body className="p-3 p-md-4">
-              <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Quick Actions</h5>
-              <div className="d-grid gap-2">
-                <Button 
-                  variant="outline-primary" 
-                  className="d-flex align-items-center justify-content-between" 
-                  style={{ fontSize: '86.625%', fontWeight: 'bold' }}
-                  onClick={handleNewOrder}
-                >
-                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Create New Order</span>
-                  <i className="bi bi-plus-lg"></i>
-                </Button>
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
-                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Manage Tables</span>
-                  <i className="bi bi-grid-3x3"></i>
-                </Button>
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
-                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>View Reports</span>
-                  <i className="bi bi-graph-up"></i>
-                </Button>
-                <Button variant="outline-primary" className="d-flex align-items-center justify-content-between" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
-                  <span style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Staff Schedule</span>
-                  <i className="bi bi-calendar3"></i>
-                </Button>
-              </div>
-            </Card.Body>
-          </Card>
+          <div className="d-flex flex-column gap-4">
+            {/* Quick Actions */}
+            <Card className="content-card">
+              <Card.Header className="content-card-header">
+                <h5 className="card-title mb-1">
+                  <i className="bi bi-lightning me-2 text-warning"></i>
+                  Quick Actions
+                </h5>
+                <p className="text-muted mb-0">Common tasks and shortcuts</p>
+              </Card.Header>
+              <Card.Body className="p-3">
+                <div className="quick-actions-grid">
+                  <Button 
+                    variant="outline-primary" 
+                    className="quick-action-btn"
+                    onClick={handleNewOrder}
+                  >
+                    <div className="action-icon">
+                      <i className="bi bi-plus-circle"></i>
+                    </div>
+                    <span>New Order</span>
+                  </Button>
+                  <Button variant="outline-success" className="quick-action-btn">
+                    <div className="action-icon">
+                      <i className="bi bi-grid-3x3"></i>
+                    </div>
+                    <span>Manage Tables</span>
+                  </Button>
+                  <Button variant="outline-info" className="quick-action-btn">
+                    <div className="action-icon">
+                      <i className="bi bi-graph-up"></i>
+                    </div>
+                    <span>View Reports</span>
+                  </Button>
+                  <Button variant="outline-warning" className="quick-action-btn">
+                    <div className="action-icon">
+                      <i className="bi bi-calendar3"></i>
+                    </div>
+                    <span>Staff Schedule</span>
+                  </Button>
+                </div>
+              </Card.Body>
+            </Card>
+
+            {/* Today's Summary */}
+            <Card className="content-card">
+              <Card.Header className="content-card-header">
+                <h5 className="card-title mb-1">
+                  <i className="bi bi-calendar-check me-2 text-success"></i>
+                  Today's Summary
+                </h5>
+                <p className="text-muted mb-0">Key metrics for today</p>
+              </Card.Header>
+              <Card.Body className="p-3">
+                <div className="summary-stats">
+                  <div className="summary-item">
+                    <div className="summary-label">Orders Today</div>
+                    <div className="summary-value">{orders?.filter(o => {
+                      const today = new Date().toDateString();
+                      return new Date(o.created_at).toDateString() === today;
+                    }).length || 0}</div>
+                  </div>
+                  <div className="summary-item">
+                    <div className="summary-label">Revenue Today</div>
+                    <div className="summary-value">
+                      {formatPrice(orders?.filter(o => {
+                        const today = new Date().toDateString();
+                        return new Date(o.created_at).toDateString() === today;
+                      }).reduce((total, order) => total + (parseFloat(order.order_total) || 0), 0) || 0)}
+                    </div>
+                  </div>
+                  <div className="summary-item">
+                    <div className="summary-label">Pending Orders</div>
+                    <div className="summary-value">
+                      {orders?.filter(o => o.order_status?.toLowerCase() === 'pending').length || 0}
+                    </div>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
         </Col>
       </Row>
-    </Container>
+    </div>
   );
 };
 

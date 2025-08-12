@@ -75,76 +75,92 @@ const TableDetail = () => {
 
   if (loading) {
     return (
-      <Container className="py-4">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
+      <div className="page-container">
+        <div className="loading-state">
+          <div className="loading-spinner">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3 text-muted">Loading table details...</p>
           </div>
         </div>
-      </Container>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Container className="py-4">
-        <Alert variant="danger">{error}</Alert>
-      </Container>
+      <div className="page-container">
+        <div className="error-state">
+          <Alert variant="danger" className="error-alert">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            {error}
+          </Alert>
+        </div>
+      </div>
     );
   }
 
   if (!table) {
     return (
-      <Container className="py-4">
-        <Alert variant="warning">Table not found</Alert>
-      </Container>
+      <div className="page-container">
+        <div className="error-state">
+          <Alert variant="warning" className="error-alert">Table not found</Alert>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Container fluid className="p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <Button
-            variant="link"
-            className="text-decoration-none p-0 mb-2"
-            onClick={() => navigate('/tables')}
-            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
-          >
-            <i className="bi bi-arrow-left me-2"></i>
-            Back to Tables
-          </Button>
-          <h1 className="h3 mb-0" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
-            {table.table_name}
-          </h1>
-        </div>
-        <div className="d-flex gap-2">
-          <Button
-            variant="outline-primary"
-            onClick={() => setShowEditModal(true)}
-            className="d-flex align-items-center gap-2"
-            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
-          >
-            <i className="bi bi-pencil"></i>
-            Edit Table
-          </Button>
-          <Button
-            variant="outline-danger"
-            onClick={() => setShowDeleteModal(true)}
-            className="d-flex align-items-center gap-2"
-            style={{ fontSize: '78.75%', fontWeight: 'bold' }}
-          >
-            <i className="bi bi-trash"></i>
-            Delete Table
-          </Button>
+    <div className="page-container">
+      <div className="page-header">
+        <div className="header-content">
+          <div className="header-text">
+            <Button
+              variant="link"
+              className="text-decoration-none p-0 mb-2 item-link"
+              onClick={() => navigate('/tables')}
+            >
+              <i className="bi bi-arrow-left me-2"></i>
+              Back to Tables
+            </Button>
+            <h1 className="page-title">
+              <i className="bi bi-grid-3x3 me-3 text-primary"></i>
+              {table.table_name}
+            </h1>
+            <p className="page-subtitle">View and manage details for this table</p>
+          </div>
+          <div className="header-actions d-flex gap-2">
+            <Button
+              variant="outline-primary"
+              onClick={() => setShowEditModal(true)}
+              className="export-btn"
+            >
+              <i className="bi bi-pencil me-2"></i>
+              Edit Table
+            </Button>
+            <Button
+              variant="outline-danger"
+              onClick={() => setShowDeleteModal(true)}
+              className="export-btn"
+            >
+              <i className="bi bi-trash me-2"></i>
+              Delete Table
+            </Button>
+          </div>
         </div>
       </div>
 
       <Row>
         <Col md={6}>
-          <Card className="shadow-sm">
+          <Card className="content-card">
+            <Card.Header className="content-card-header">
+              <h5 className="card-title mb-0">
+                <i className="bi bi-info-circle me-2 text-primary"></i>
+                Table Details
+              </h5>
+            </Card.Header>
             <Card.Body>
-              <h5 className="card-title mb-4" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Table Details</h5>
               <div className="row g-3">
                 <div className="col-sm-6">
                   <div className="d-flex align-items-center">
@@ -201,47 +217,49 @@ const TableDetail = () => {
       </Row>
 
       {/* Edit Table Modal */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Edit Table</Modal.Title>
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered className="modern-modal">
+        <Modal.Header closeButton className="modal-header">
+          <Modal.Title className="modal-title">
+            <i className="bi bi-pencil-square me-2 text-primary"></i>
+            Edit Table
+          </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
-          <Modal.Body>
+          <Modal.Body className="modal-body">
             {formError && (
-              <Alert variant="danger" className="mb-3" style={{ fontSize: '78.75%' }}>
+              <Alert variant="danger" className="form-error-alert">
+                <i className="bi bi-exclamation-triangle me-2"></i>
                 {formError}
               </Alert>
             )}
 
-            <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Table Name</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Table Name</Form.Label>
               <Form.Control
                 type="text"
                 name="table_name"
                 value={formData.table_name}
                 onChange={handleInputChange}
                 required
-                style={{ fontSize: '78.75%' }}
+                className="form-control-modern"
               />
             </Form.Group>
           </Modal.Body>
-          <Modal.Footer>
+          <Modal.Footer className="modal-footer">
             <Button 
               variant="outline-secondary" 
               onClick={() => setShowEditModal(false)} 
-              className="d-flex align-items-center gap-2"
-              style={{ fontSize: '78.75%' }}
+              className="cancel-btn"
             >
-              <i className="bi bi-x-circle"></i>
+              <i className="bi bi-x-circle me-2"></i>
               Cancel
             </Button>
             <Button 
               variant="primary" 
               type="submit"
-              className="d-flex align-items-center gap-2"
-              style={{ fontSize: '78.75%' }}
+              className="submit-btn"
             >
-              <i className="bi bi-check2-circle"></i>
+              <i className="bi bi-check2-circle me-2"></i>
               Save Changes
             </Button>
           </Modal.Footer>
@@ -249,36 +267,37 @@ const TableDetail = () => {
       </Modal>
 
       {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Delete Table</Modal.Title>
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered className="modern-modal">
+        <Modal.Header closeButton className="modal-header">
+          <Modal.Title className="modal-title">
+            <i className="bi bi-trash me-2 text-danger"></i>
+            Delete Table
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <p style={{ fontSize: '78.75%' }}>Are you sure you want to delete <strong>{table.table_name}</strong>?</p>
-          <p className="text-danger" style={{ fontSize: '78.75%' }}>This action cannot be undone.</p>
+        <Modal.Body className="modal-body">
+          <p>Are you sure you want to delete <strong>{table.table_name}</strong>?</p>
+          <p className="text-danger mb-0">This action cannot be undone.</p>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="modal-footer">
           <Button 
             variant="outline-secondary" 
             onClick={() => setShowDeleteModal(false)}
-            className="d-flex align-items-center gap-2"
-            style={{ fontSize: '78.75%' }}
+            className="cancel-btn"
           >
-            <i className="bi bi-x-circle"></i>
+            <i className="bi bi-x-circle me-2"></i>
             Cancel
           </Button>
           <Button 
             variant="danger" 
             onClick={handleDelete}
-            className="d-flex align-items-center gap-2"
-            style={{ fontSize: '78.75%' }}
+            className="submit-btn"
           >
-            <i className="bi bi-trash"></i>
+            <i className="bi bi-trash me-2"></i>
             Delete
           </Button>
         </Modal.Footer>
       </Modal>
-    </Container>
+    </div>
   );
 };
 

@@ -32,7 +32,6 @@ const OrderItemList = () => {
   }, [fetchOrderItems, fetchOrders, fetchFoods]);
 
   useEffect(() => {
-    // Update food price and total when food or quantity changes
     const food = foods.find(f => f.food_id === formData.food_id);
     const price = food ? Number(food.price) : 0;
     setFoodPrice(price);
@@ -94,7 +93,6 @@ const OrderItemList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
-    // Validate form data
     if (!formData.order_id) {
       setFormError('Order selection is required');
       return;
@@ -117,13 +115,10 @@ const OrderItemList = () => {
       if (selectedOrderItem) {
         await updateOrderItem(selectedOrderItem.order_item_id, payload);
       } else {
-        // Check if an order item with the same order_id and food_id exists
         const existingItem = orderItems.find(item => 
           item.order_id === formData.order_id && item.food_id === formData.food_id
         );
-        
         if (existingItem) {
-          // If exists, update with combined quantity
           const updatedPayload = {
             ...payload,
             order_item_id: existingItem.order_item_id,
@@ -131,11 +126,11 @@ const OrderItemList = () => {
           };
           await updateOrderItem(existingItem.order_item_id, updatedPayload);
         } else {
-        await createOrderItem(payload);
+          await createOrderItem(payload);
         }
       }
       handleCloseModal();
-      fetchOrderItems(); // Refresh the list
+      fetchOrderItems();
     } catch (err) {
       setFormError(err.message || 'Failed to save order item');
     }
@@ -165,135 +160,183 @@ const OrderItemList = () => {
 
   if (loading) {
     return (
-      <Container className="py-4">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
+      <div className="page-container">
+        <div className="loading-state">
+          <div className="loading-spinner">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3 text-muted">Loading order items...</p>
           </div>
         </div>
-      </Container>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Container className="py-4">
-        <Alert variant="danger">{error}</Alert>
-      </Container>
+      <div className="page-container">
+        <div className="error-state">
+          <Alert variant="danger" className="error-alert">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            {error}
+          </Alert>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Container fluid className="p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h3 mb-0 page-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Order Item Management</h1>
-        <Button 
-          variant="primary" 
-          onClick={() => handleShowModal()} 
-          className="d-flex align-items-center gap-2"
-          style={{ fontSize: '78.75%', fontWeight: 'bold' }}
-        >
-          <i className="bi bi-plus-lg"></i>
-          <span>Add New Order Item</span>
-        </Button>
+    <div className="page-container">
+      <div className="page-header">
+        <div className="header-content">
+          <div className="header-text">
+            <h1 className="page-title">
+              <i className="bi bi-box-seam me-3 text-primary"></i>
+              Order Item Management
+            </h1>
+            <p className="page-subtitle">Create and manage items within orders</p>
+          </div>
+          <div className="header-actions">
+            <Button 
+              variant="primary" 
+              onClick={() => handleShowModal()} 
+              className="primary-action-btn"
+              size="lg"
+            >
+              <i className="bi bi-plus-lg me-2"></i>
+              Add New Order Item
+            </Button>
+          </div>
+        </div>
       </div>
-      <Card>
-        <Card.Body>
+
+      <Card className="content-card">
+        <Card.Header className="content-card-header">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="header-content">
+              <h5 className="card-title mb-1">
+                <i className="bi bi-list-ul me-2 text-primary"></i>
+                Order Items List
+              </h5>
+              <p className="text-muted mb-0">All items associated with orders</p>
+            </div>
+            <div className="header-actions">
+              <Button variant="outline-primary" size="sm" className="export-btn">
+                <i className="bi bi-download me-2"></i>
+                Export
+              </Button>
+            </div>
+          </div>
+        </Card.Header>
+        <Card.Body className="p-0">
           <div className="table-responsive">
-            <Table hover className="align-middle">
-              <thead>
+            <Table className="modern-table">
+              <thead className="table-header">
                 <tr>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Order Item ID</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Order ID</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Food ID</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Quantity</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Created At</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Updated At</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Actions</th>
+                  <th>Order Item ID</th>
+                  <th>Order ID</th>
+                  <th>Food ID</th>
+                  <th>Quantity</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {orderItems.map((item) => (
-                  <tr key={item.order_item_id}>
-                    <td>
-                      <Button
-                        variant="link"
-                        className="p-0 text-decoration-none order-link"
-                        onClick={() => navigate(`/order-items/${item.order_item_id}`)}
-                        style={{ fontSize: '78.75%', fontWeight: 'normal' }}
-                      >
-                        {item.order_item_id}
-                      </Button>
-                    </td>
-                    <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{item.order_id}</td>
-                    <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{item.food_id}</td>
-                    <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{item.quantity}</td>
-                    <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{item.created_at ? new Date(item.created_at).toLocaleString() : ''}</td>
-                    <td style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{item.updated_at ? new Date(item.updated_at).toLocaleString() : ''}</td>
-                    <td>
-                      <div className="d-flex gap-2">
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          onClick={() => handleShowModal(item)}
-                          className="action-icon-btn edit-btn"
-                        >
-                          <i className="bi bi-pencil"></i>
-                        </Button>
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => handleDelete(item.order_item_id)}
-                          className="action-icon-btn delete-btn"
-                        >
-                          <i className="bi bi-trash"></i>
+                {orderItems.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="text-center py-5">
+                      <div className="empty-state">
+                        <i className="bi bi-box-seam text-muted fs-1"></i>
+                        <p className="mt-3 text-muted">No order items found</p>
+                        <Button variant="outline-primary" size="sm" onClick={() => handleShowModal()}>
+                          Create First Order Item
                         </Button>
                       </div>
                     </td>
                   </tr>
-                ))}
-                {orderItems.length === 0 && (
-                  <tr>
-                    <td colSpan="7" className="text-center py-4" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>
-                      No order items found
-                    </td>
-                  </tr>
+                ) : (
+                  orderItems.map((item) => (
+                    <tr key={item.order_item_id} className="data-row">
+                      <td>
+                        <Button
+                          variant="link"
+                          className="p-0 text-decoration-none item-link"
+                          onClick={() => navigate(`/order-items/${item.order_item_id}`)}
+                        >
+                          <span className="item-id">{item.order_item_id}</span>
+                        </Button>
+                      </td>
+                      <td>{item.order_id}</td>
+                      <td>{item.food_id}</td>
+                      <td>{item.quantity}</td>
+                      <td>{item.created_at ? new Date(item.created_at).toLocaleString() : ''}</td>
+                      <td>{item.updated_at ? new Date(item.updated_at).toLocaleString() : ''}</td>
+                      <td>
+                        <div className="action-buttons">
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            onClick={() => handleShowModal(item)}
+                            className="action-btn edit-btn"
+                            title="Edit Order Item"
+                          >
+                            <i className="bi bi-pencil"></i>
+                          </Button>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => handleDelete(item.order_item_id)}
+                            className="action-btn delete-btn"
+                            title="Delete Order Item"
+                          >
+                            <i className="bi bi-trash"></i>
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
                 )}
               </tbody>
             </Table>
           </div>
         </Card.Body>
       </Card>
-      {/* Add/Edit Order Item Modal */}
-      <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title style={{ fontSize: '86.625%', fontWeight: 'bold' }}>{selectedOrderItem ? 'Edit Order Item' : 'Add New Order Item'}</Modal.Title>
+
+      <Modal show={showModal} onHide={handleCloseModal} centered className="modern-modal">
+        <Modal.Header closeButton className="modal-header">
+          <Modal.Title className="modal-title">
+            <i className={`bi ${selectedOrderItem ? 'bi-pencil-square' : 'bi-plus-circle'} me-2 text-primary`}></i>
+            {selectedOrderItem ? 'Edit Order Item' : 'Add New Order Item'}
+          </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
-          <Modal.Body>
+          <Modal.Body className="modal-body">
             {formError && (
-              <Alert variant="danger" className="mb-3">
-                <p className="mb-0" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>{formError}</p>
+              <Alert variant="danger" className="form-error-alert">
+                <i className="bi bi-exclamation-triangle me-2"></i>
+                {formError}
               </Alert>
             )}
-            <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Order Item ID</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Order Item ID</Form.Label>
               <Form.Control
                 type="text"
                 name="order_item_id"
                 value={formData.order_item_id}
                 disabled
-                style={{ fontSize: '78.75%' }}
+                className="form-control-modern"
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Order</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Order</Form.Label>
               <Form.Select
                 name="order_id"
                 value={formData.order_id}
                 onChange={handleInputChange}
                 required
-                style={{ fontSize: '78.75%' }}
+                className="form-select-modern"
               >
                 <option value="">Select an order</option>
                 {orders.map(order => (
@@ -303,14 +346,14 @@ const OrderItemList = () => {
                 ))}
               </Form.Select>
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Food</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Food</Form.Label>
               <Form.Select
                 name="food_id"
                 value={formData.food_id}
                 onChange={handleInputChange}
                 required
-                style={{ fontSize: '78.75%' }}
+                className="form-select-modern"
               >
                 <option value="">Select a food</option>
                 {foods.map(food => (
@@ -320,18 +363,18 @@ const OrderItemList = () => {
                 ))}
               </Form.Select>
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Price</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Price</Form.Label>
               <Form.Control
                 type="text"
                 value={foodPrice ? `$${foodPrice.toFixed(2)}` : ''}
                 readOnly
                 plaintext
-                style={{ fontSize: '78.75%' }}
+                className="form-control-modern"
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Quantity</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Quantity</Form.Label>
               <InputGroup>
                 <Form.Control
                   type="number"
@@ -340,55 +383,52 @@ const OrderItemList = () => {
                   value={formData.quantity}
                   onChange={handleInputChange}
                   required
-                  style={{ fontSize: '78.75%' }}
+                  className="form-control-modern"
                 />
               </InputGroup>
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Total</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Total</Form.Label>
               <Form.Control
                 type="text"
                 value={foodPrice && formData.quantity ? `$${totalPrice.toFixed(2)}` : ''}
                 readOnly
                 plaintext
-                style={{ fontSize: '78.75%' }}
+                className="form-control-modern"
               />
             </Form.Group>
           </Modal.Body>
-          <Modal.Footer>
+          <Modal.Footer className="modal-footer">
             <Button 
               variant="outline-secondary" 
               onClick={handleCloseModal} 
-              className="d-flex align-items-center gap-2"
-              style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+              className="cancel-btn"
             >
-              <i className="bi bi-x-circle"></i>
+              <i className="bi bi-x-circle me-2"></i>
               Cancel
             </Button>
             <Button 
               variant="primary" 
               type="submit" 
-              className="d-flex align-items-center gap-2"
-              style={{ fontSize: '78.75%', fontWeight: 'bold' }}
+              className="submit-btn"
             >
-              <i className={`bi ${selectedOrderItem ? 'bi-check2-circle' : 'bi-plus-circle'}`}></i>
+              <i className={`bi ${selectedOrderItem ? 'bi-check2-circle' : 'bi-plus-circle'} me-2`}></i>
               {selectedOrderItem ? 'Update Order Item' : 'Create Order Item'}
             </Button>
           </Modal.Footer>
         </Form>
       </Modal>
-
-      {/* Delete Confirmation Modal */}
+      
       <ConfirmDialog
         show={showDeleteModal}
         onHide={cancelDelete}
         onConfirm={confirmDelete}
         title="Delete Order Item"
-        message="Are you sure you want to delete this order item?"
-        confirmText="Yes"
-        cancelText="No"
+        message="Are you sure you want to delete this order item? This action cannot be undone."
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
       />
-    </Container>
+    </div>
   );
 };
 

@@ -3,7 +3,7 @@ import { Navbar, Nav, Container, NavDropdown, Badge, Offcanvas } from 'react-boo
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const NavigationBar = () => {
+const NavigationBar = ({ onToggleSidebar }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -21,6 +21,16 @@ const NavigationBar = () => {
   return (
     <Navbar bg="white" expand="lg" className="border-bottom shadow-sm">
       <Container fluid>
+        {/* Sidebar toggle for mobile */}
+        <button
+          type="button"
+          className="btn btn-link d-lg-none me-2 text-decoration-none"
+          aria-label="Open sidebar"
+          onClick={onToggleSidebar}
+        >
+          <i className="bi bi-list fs-4"></i>
+        </button>
+
         <Navbar.Brand href="#home" className="d-flex align-items-center">
           <div className="bg-primary bg-opacity-10 rounded-circle p-2 me-2">
             <i className="bi bi-shop text-primary"></i>
@@ -34,7 +44,7 @@ const NavigationBar = () => {
           className="border-0 d-lg-none"
           onClick={() => setShowOffcanvas(true)}
         >
-          <i className="bi bi-list fs-4"></i>
+          <i className="bi bi-three-dots fs-4"></i>
         </Navbar.Toggle>
         
         {/* Mobile Menu */}

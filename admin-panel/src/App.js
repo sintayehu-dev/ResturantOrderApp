@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { UserProvider } from './contexts/UserContext';
@@ -29,17 +29,33 @@ import InvoiceDetail from './pages/invoices/InvoiceDetail';
 import Profile from './pages/profile/Profile';
 
 // Layout component for protected routes
-const DashboardLayout = () => (
-  <div className="d-flex">
-    <Sidebar />
-    <div className="flex-grow-1">
-      <Navbar />
-      <main className="bg-light min-vh-100">
-        <Outlet />
-      </main>
+const DashboardLayout = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [showSidebarMobile, setShowSidebarMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 992);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return (
+    <div className="app-layout d-flex">
+      <Sidebar
+        isMobile={isMobile}
+        show={showSidebarMobile}
+        onHide={() => setShowSidebarMobile(false)}
+      />
+      <div className="flex-grow-1">
+        <Navbar onToggleSidebar={() => setShowSidebarMobile(true)} />
+        <main className="main-content bg-light min-vh-100">
+          <Outlet />
+        </main>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 function App() {
   return (

@@ -110,86 +110,137 @@ const TableList = () => {
 
   if (loading) {
     return (
-      <Container className="py-4">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
+      <div className="page-container">
+        <div className="loading-state">
+          <div className="loading-spinner">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3 text-muted">Loading tables...</p>
           </div>
         </div>
-      </Container>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Container className="py-4">
-        <Alert variant="danger">{error}</Alert>
-      </Container>
+      <div className="page-container">
+        <div className="error-state">
+          <Alert variant="danger" className="error-alert">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            {error}
+          </Alert>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Container fluid className="p-4 table-list-container">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h3 mb-0 page-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>Table Management</h1>
-        <Button variant="primary" onClick={() => handleShowModal()} className="action-button" style={{ fontSize: '78.75%', fontWeight: 'bold' }}>
-          <i className="bi bi-plus-lg me-2"></i>
-          Add New Table
-        </Button>
+    <div className="page-container">
+      {/* Page Header */}
+      <div className="page-header">
+        <div className="header-content">
+          <div className="header-text">
+            <h1 className="page-title">
+              <i className="bi bi-grid-3x3 me-3 text-primary"></i>
+              Table Management
+            </h1>
+            <p className="page-subtitle">Create, edit, and manage restaurant tables</p>
+          </div>
+          <div className="header-actions">
+            <Button variant="primary" onClick={() => handleShowModal()} className="primary-action-btn" size="lg">
+              <i className="bi bi-plus-lg me-2"></i>
+              Add New Table
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <Card className="table-card">
-        <Card.Body>
+      {/* Main Content */}
+      <Card className="content-card">
+        <Card.Header className="content-card-header">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="header-content">
+              <h5 className="card-title mb-1">
+                <i className="bi bi-list-ul me-2 text-primary"></i>
+                Tables List
+              </h5>
+              <p className="text-muted mb-0">All tables with their creation and update timestamps</p>
+            </div>
+            <div className="header-actions">
+              <Button variant="outline-primary" size="sm" className="export-btn">
+                <i className="bi bi-download me-2"></i>
+                Export
+              </Button>
+            </div>
+          </div>
+        </Card.Header>
+        <Card.Body className="p-0">
           <div className="table-responsive">
-            <Table hover className="align-middle menu-table">
-              <thead>
+            <Table className="modern-table">
+              <thead className="table-header">
                 <tr>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Table ID</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Name</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Created At</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Updated At</th>
-                  <th style={{ fontSize: '78.75%', fontWeight: '500' }}>Actions</th>
+                  <th>Table ID</th>
+                  <th>Name</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {tables.map((table) => (
-                  <tr key={table.table_id}>
-                    <td>
-                      <Button
-                        variant="link"
-                        className="p-0 text-decoration-none table-link"
-                        onClick={() => navigate(`/tables/${table.table_id}`)}
-                      >
-                        {table.table_id}
-                      </Button>
-                    </td>
-                    <td className="table-item-text">{table.table_name}</td>
-                    <td className="table-item-text">{new Date(table.created_at).toLocaleString()}</td>
-                    <td className="table-item-text">{new Date(table.updated_at).toLocaleString()}</td>
-                    <td>
-                      <div className="d-flex gap-2">
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          onClick={() => handleShowModal(table)}
-                          className="action-icon-btn edit-btn"
-                          style={{ fontSize: '78.75%' }}
-                        >
-                          <i className="bi bi-pencil"></i>
-                        </Button>
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => handleDelete(table.table_id)}
-                          className="action-icon-btn delete-btn"
-                          style={{ fontSize: '78.75%' }}
-                        >
-                          <i className="bi bi-trash"></i>
+                {tables.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-5">
+                      <div className="empty-state">
+                        <i className="bi bi-grid-3x3 text-muted fs-1"></i>
+                        <p className="mt-3 text-muted">No tables found</p>
+                        <Button variant="outline-primary" size="sm" onClick={() => handleShowModal()}>
+                          Create First Table
                         </Button>
                       </div>
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  tables.map((table) => (
+                    <tr key={table.table_id} className="data-row">
+                      <td>
+                        <Button
+                          variant="link"
+                          className="p-0 text-decoration-none item-link"
+                          onClick={() => navigate(`/tables/${table.table_id}`)}
+                        >
+                          <span className="item-id">{table.table_id}</span>
+                        </Button>
+                      </td>
+                      <td className="table-item-text">{table.table_name}</td>
+                      <td className="table-item-text">{new Date(table.created_at).toLocaleString()}</td>
+                      <td className="table-item-text">{new Date(table.updated_at).toLocaleString()}</td>
+                      <td>
+                        <div className="action-buttons">
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            onClick={() => handleShowModal(table)}
+                            className="action-btn edit-btn"
+                            title="Edit Table"
+                          >
+                            <i className="bi bi-pencil"></i>
+                          </Button>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => handleDelete(table.table_id)}
+                            className="action-btn delete-btn"
+                            title="Delete Table"
+                          >
+                            <i className="bi bi-trash"></i>
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </Table>
           </div>
@@ -197,22 +248,24 @@ const TableList = () => {
       </Card>
 
       {/* Add/Edit Table Modal */}
-      <Modal show={showModal} onHide={handleCloseModal} centered className="table-modal">
-        <Modal.Header closeButton>
-          <Modal.Title className="modal-title" style={{ fontSize: '86.625%', fontWeight: 'bold' }}>
+      <Modal show={showModal} onHide={handleCloseModal} centered className="modern-modal">
+        <Modal.Header closeButton className="modal-header">
+          <Modal.Title className="modal-title">
+            <i className={`bi ${selectedTable ? 'bi-pencil-square' : 'bi-plus-circle'} me-2 text-primary`}></i>
             {selectedTable ? 'Edit Table' : 'Add New Table'}
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
-          <Modal.Body>
+          <Modal.Body className="modal-body">
             {formError && (
-              <Alert variant="danger" className="mb-3" style={{ fontSize: '78.75%' }}>
+              <Alert variant="danger" className="form-error-alert">
+                <i className="bi bi-exclamation-triangle me-2"></i>
                 {formError}
               </Alert>
             )}
 
-            <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Table ID</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Table ID</Form.Label>
               <Form.Control
                 type="text"
                 name="table_id"
@@ -221,12 +274,12 @@ const TableList = () => {
                 required
                 placeholder="Enter table ID"
                 disabled={!!selectedTable}
-                style={{ fontSize: '78.75%' }}
+                className="form-control-modern"
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label style={{ fontSize: '78.75%', fontWeight: '500' }}>Table Name</Form.Label>
+            <Form.Group className="form-group">
+              <Form.Label className="form-label">Table Name</Form.Label>
               <Form.Control
                 type="text"
                 name="table_name"
@@ -234,16 +287,16 @@ const TableList = () => {
                 onChange={handleInputChange}
                 required
                 placeholder="Enter table name"
-                style={{ fontSize: '78.75%' }}
+                className="form-control-modern"
               />
             </Form.Group>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="outline-secondary" onClick={handleCloseModal} className="cancel-button d-flex align-items-center" style={{ fontSize: '78.75%' }}>
+          <Modal.Footer className="modal-footer">
+            <Button variant="outline-secondary" onClick={handleCloseModal} className="cancel-btn">
               <i className="bi bi-x-circle me-2"></i>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" className="submit-button d-flex align-items-center" style={{ fontSize: '78.75%' }}>
+            <Button variant="primary" type="submit" className="submit-btn">
               <i className={`bi ${selectedTable ? 'bi-check2-circle' : 'bi-plus-circle'} me-2`}></i>
               {selectedTable ? 'Update Table' : 'Create Table'}
             </Button>
@@ -257,11 +310,11 @@ const TableList = () => {
         onHide={cancelDelete}
         onConfirm={confirmDelete}
         title="Delete Table"
-        message="Are you sure you want to delete this table?"
-        confirmText="Yes"
-        cancelText="No"
+        message="Are you sure you want to delete this table? This action cannot be undone."
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
       />
-    </Container>
+    </div>
   );
 };
 
