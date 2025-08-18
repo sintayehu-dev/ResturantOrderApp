@@ -79,12 +79,19 @@ const uploadFoodImage = async (file) => {
   }
 };
 
+const extractItems = (payload) => {
+  // Supports both old (array) and new (paginated object) API shapes
+  if (Array.isArray(payload)) return payload;
+  if (payload && Array.isArray(payload.data)) return payload.data;
+  return [];
+};
+
 const foodService = {
   // Get all foods
-  getAllFoods: async () => {
+  getAllFoods: async (params = {}) => {
     try {
-      const response = await foodApi.get('');
-      return response.data;
+      const response = await foodApi.get('', { params: { page: 1, limit: 1000, ...params } });
+      return extractItems(response.data);
     } catch (error) {
       throw handleApiError(error);
     }
@@ -101,10 +108,10 @@ const foodService = {
   },
   
   // Get foods by menu ID
-  getFoodsByMenuId: async (menuId) => {
+  getFoodsByMenuId: async (menuId, params = {}) => {
     try {
-      const response = await foodApi.get(`?menu_id=${menuId}`);
-      return response.data;
+      const response = await foodApi.get('', { params: { menu_id: menuId, page: 1, limit: 1000, ...params } });
+      return extractItems(response.data);
     } catch (error) {
       throw handleApiError(error);
     }
@@ -143,7 +150,7 @@ const foodService = {
   // Get next food ID
   getNextFoodId: async () => {
     try {
-      const foods = await foodService.getAllFoods();
+      const foods = await foodService.getAllFoods({ page: 1, limit: 10000 });
       if (!foods || foods.length === 0) return 'food-001';
       
       // Extract numbers from food_id like "food-004"
