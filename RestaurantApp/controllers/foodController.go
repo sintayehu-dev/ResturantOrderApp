@@ -3,40 +3,62 @@ package controllers
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"time"
+
+	"math"
+	"os"
 
 	"github.com/RestaurantApp/databases"
 	"github.com/RestaurantApp/helpers"
 	"github.com/RestaurantApp/models"
-	"github.com/gin-gonic/gin"
-	"os"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"github.com/gin-gonic/gin"
 )
 
-// GetFoods retrieves all food items, with optional menu_id filtering
+// GetFoods retrieves all food items, with optional menu_id filtering and pagination
 func GetFoods() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
+		// Get query parameters
 		menuId := c.Query("menu_id")
+		pagination := helpers.GetPaginationParams(c)
+		offset := helpers.GetOffset(pagination.Page, pagination.Limit)
 
 		var foods []models.Food
-		var err error
+		var total int64
 
+		// Build query
+		query := databases.DB.WithContext(ctx)
+
+		// Add menu filter if provided
 		if menuId != "" {
-			err = databases.DB.WithContext(ctx).Where("menu_id = ?", menuId).Find(&foods).Error
-		} else {
-			err = databases.DB.WithContext(ctx).Find(&foods).Error
+			query = query.Where("menu_id = ?", menuId)
 		}
 
-		if err != nil {
+		// Get total count
+		if err := query.Model(&models.Food{}).Count(&total).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to count food items"})
+			return
+		}
+
+		// Get paginated results
+		if err := query.Offset(offset).Limit(pagination.Limit).Find(&foods).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to retrieve food items. Please try again later."})
 			return
 		}
 
-		c.JSON(http.StatusOK, foods)
+		// Create pagination response
+		paginationInfo := helpers.CreatePaginationResponse(pagination.Page, pagination.Limit, total)
+
+		// Return paginated response
+		c.JSON(http.StatusOK, gin.H{
+			"data":       foods,
+			"pagination": paginationInfo,
+		})
 	}
 }
 
@@ -59,7 +81,7 @@ func GetFood() gin.HandlerFunc {
 	}
 }
 
-// GetFoodsByCategory retrieves food items filtered by menu category
+// GetFoodsByCategory retrieves food items filtered by menu category with pagination
 func GetFoodsByCategory() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -67,20 +89,70 @@ func GetFoodsByCategory() gin.HandlerFunc {
 
 		category := c.Param("category")
 
+		// Get pagination parameters
+		page := c.DefaultQuery("page", "1")
+		limit := c.DefaultQuery("limit", "10")
+
+		// Convert to integers
+		pageInt, err := strconv.Atoi(page)
+		if err != nil || pageInt < 1 {
+			pageInt = 1
+		}
+
+		limitInt, err := strconv.Atoi(limit)
+		if err != nil || limitInt < 1 {
+			limitInt = 10
+		}
+		if limitInt > 100 {
+			limitInt = 100
+		}
+
+		// Calculate offset
+		offset := (pageInt - 1) * limitInt
+
 		var foods []models.Food
-		if err := databases.DB.WithContext(ctx).
+		var total int64
+
+		// Build query with JOIN
+		query := databases.DB.WithContext(ctx).
 			Joins("JOIN menus ON foods.menu_id = menus.menu_id").
-			Where("menus.category = ?", category).
-			Find(&foods).Error; err != nil {
+			Where("menus.category = ?", category)
+
+		// Get total count
+		if err := query.Model(&models.Food{}).Count(&total).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to count food items"})
+			return
+		}
+
+		// Get paginated results
+		if err := query.Offset(offset).Limit(limitInt).Find(&foods).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to retrieve food items. Please try again later."})
 			return
 		}
 
-		c.JSON(http.StatusOK, foods)
+		// Calculate pagination info
+		totalPages := int(math.Ceil(float64(total) / float64(limitInt)))
+		hasNext := pageInt < totalPages
+		hasPrev := pageInt > 1
+
+		// Return paginated response
+		c.JSON(http.StatusOK, gin.H{
+			"data": foods,
+			"pagination": gin.H{
+				"page":        pageInt,
+				"limit":       limitInt,
+				"total":       total,
+				"total_pages": totalPages,
+				"has_next":    hasNext,
+				"has_prev":    hasPrev,
+				"next_page":   pageInt + 1,
+				"prev_page":   pageInt - 1,
+			},
+		})
 	}
 }
 
-// SearchFoods searches for food items by name
+// SearchFoods searches for food items by name with pagination
 func SearchFoods() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -92,15 +164,65 @@ func SearchFoods() gin.HandlerFunc {
 			return
 		}
 
+		// Get pagination parameters
+		page := c.DefaultQuery("page", "1")
+		limit := c.DefaultQuery("limit", "10")
+
+		// Convert to integers
+		pageInt, err := strconv.Atoi(page)
+		if err != nil || pageInt < 1 {
+			pageInt = 1
+		}
+
+		limitInt, err := strconv.Atoi(limit)
+		if err != nil || limitInt < 1 {
+			limitInt = 10
+		}
+		if limitInt > 100 {
+			limitInt = 100
+		}
+
+		// Calculate offset
+		offset := (pageInt - 1) * limitInt
+
 		var foods []models.Food
-		if err := databases.DB.WithContext(ctx).
-			Where("name LIKE ?", "%"+query+"%").
-			Find(&foods).Error; err != nil {
+		var total int64
+
+		// Build query
+		searchQuery := databases.DB.WithContext(ctx).
+			Where("name LIKE ?", "%"+query+"%")
+
+		// Get total count
+		if err := searchQuery.Model(&models.Food{}).Count(&total).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to count search results"})
+			return
+		}
+
+		// Get paginated results
+		if err := searchQuery.Offset(offset).Limit(limitInt).Find(&foods).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to search food items. Please try again later."})
 			return
 		}
 
-		c.JSON(http.StatusOK, foods)
+		// Calculate pagination info
+		totalPages := int(math.Ceil(float64(total) / float64(limitInt)))
+		hasNext := pageInt < totalPages
+		hasPrev := pageInt > 1
+
+		// Return paginated response
+		c.JSON(http.StatusOK, gin.H{
+			"data": foods,
+			"pagination": gin.H{
+				"page":        pageInt,
+				"limit":       limitInt,
+				"total":       total,
+				"total_pages": totalPages,
+				"has_next":    hasNext,
+				"has_prev":    hasPrev,
+				"next_page":   pageInt + 1,
+				"prev_page":   pageInt - 1,
+			},
+		})
 	}
 }
 
