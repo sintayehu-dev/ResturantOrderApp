@@ -11,19 +11,41 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GetTables retrieves all tables in the restaurant
+// GetTables retrieves tables with pagination (similar to foods)
 func GetTables() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
+		// Pagination params
+		pagination := helpers.GetPaginationParams(c)
+		offset := helpers.GetOffset(pagination.Page, pagination.Limit)
+
 		var tables []models.Table
-		if err := databases.DB.WithContext(ctx).Find(&tables).Error; err != nil {
+		var total int64
+
+		// Get total count
+		if err := databases.DB.WithContext(ctx).Model(&models.Table{}).Count(&total).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to count tables"})
+			return
+		}
+
+		// Get paginated results
+		if err := databases.DB.WithContext(ctx).
+			Offset(offset).
+			Limit(pagination.Limit).
+			Find(&tables).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to retrieve tables. Please try again later."})
 			return
 		}
 
-		c.JSON(http.StatusOK, tables)
+		// Create pagination response
+		paginationInfo := helpers.CreatePaginationResponse(pagination.Page, pagination.Limit, total)
+
+		c.JSON(http.StatusOK, gin.H{
+			"data":       tables,
+			"pagination": paginationInfo,
+		})
 	}
 }
 
