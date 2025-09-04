@@ -123,6 +123,57 @@ func Login() gin.HandlerFunc {
 	}
 }
 
+// RefreshToken exchanges a valid refresh token for new access and refresh tokens
+func RefreshToken() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Expect JSON: { "refresh_token": "..." }
+		var payload struct {
+			RefreshToken string `json:"refresh_token"`
+		}
+		if err := c.BindJSON(&payload); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+			return
+		}
+		if payload.RefreshToken == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "refresh_token is required"})
+			return
+		}
+
+		// Validate refresh token signature and expiry
+		if _, err := helpers.ValidateToken(payload.RefreshToken); err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired refresh token"})
+			return
+		}
+
+		// Find user by refresh token
+		var user models.User
+		if err := databases.DB.Where("refresh_token = ?", payload.RefreshToken).First(&user).Error; err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "refresh token not recognized"})
+			return
+		}
+
+		// Generate new tokens
+		token, newRefreshToken, _ := helpers.GenerateAllTokens(
+			user.Email,
+			user.FirstName,
+			user.LastName,
+			user.UserType,
+			user.UserID,
+		)
+
+		helpers.UpdateAllTokens(token, newRefreshToken, user.UserID)
+
+		// Re-fetch updated user to include new tokens
+		if err := databases.DB.Where("user_id = ?", user.UserID).First(&user).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to load updated user"})
+			return
+		}
+
+		// Return user with new tokens (matches Login response shape)
+		c.JSON(http.StatusOK, user)
+	}
+}
+
 func GetUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if err := helpers.CheckUserType(c, "ADMIN"); err != nil {
