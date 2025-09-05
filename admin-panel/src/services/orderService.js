@@ -61,7 +61,8 @@ const orderService = {
   getAllOrders: async () => {
     try {
       const response = await orderApi.get('');
-      return response.data;
+      // Handle paginated response - return data array
+      return response.data.data || response.data;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -111,7 +112,7 @@ const orderService = {
   getNextOrderId: async () => {
     try {
       const orders = await orderService.getAllOrders();
-      if (!orders || orders.length === 0) return 'order-001';
+      if (!orders || !Array.isArray(orders) || orders.length === 0) return 'order-001';
       
       // Extract numbers from order_id like "order-004"
       const numbers = orders

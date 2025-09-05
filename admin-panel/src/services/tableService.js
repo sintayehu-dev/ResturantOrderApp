@@ -65,7 +65,8 @@ const getAllTables = async () => {
         'Content-Type': 'application/json',
       }
     });
-    return response.data;
+    // Handle paginated response - return data array
+    return response.data.data || response.data;
   } catch (error) {
     throw handleApiError(error);
   }
@@ -133,7 +134,7 @@ const tableService = {
   getNextTableId: async () => {
     try {
       const tables = await getAllTables();
-      if (!tables || tables.length === 0) return 'table-001';
+      if (!tables || !Array.isArray(tables) || tables.length === 0) return 'table-001';
       const numbers = tables
         .map(table => {
           const match = table.table_id && table.table_id.match(/^table-(\d+)$/);

@@ -215,7 +215,7 @@ const OrderList = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((order) => (
+                {Array.isArray(orders) && orders.map((order) => (
                   <tr key={order.order_id}>
                     <td>
                       <Button
@@ -253,7 +253,7 @@ const OrderList = () => {
                     </td>
                   </tr>
                 ))}
-                {orders.length === 0 && (
+                {(!Array.isArray(orders) || orders.length === 0) && (
                   <tr>
                     <td colSpan="6" className="text-center py-4" style={{ fontSize: '78.75%', fontWeight: 'normal' }}>
                       No orders found
@@ -310,7 +310,7 @@ const OrderList = () => {
                 style={{ fontSize: '78.75%' }}
               >
                 <option value="">Select a table</option>
-                {tables.map((table) => (
+                {Array.isArray(tables) && tables.map((table) => (
                   <option key={table.table_id} value={table.table_id}>
                     {table.table_name} ({table.table_id})
                   </option>
