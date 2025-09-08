@@ -202,6 +202,12 @@ func GetAvailableTables() gin.HandlerFunc {
 			return
 		}
 
+		// Check if no tables are available
+		if len(tables) == 0 {
+			c.JSON(http.StatusNotFound, gin.H{"error": "No available tables at the moment. All tables are currently occupied."})
+			return
+		}
+
 		c.JSON(http.StatusOK, tables)
 	}
 }

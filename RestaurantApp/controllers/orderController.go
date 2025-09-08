@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/RestaurantApp/databases"
 	"github.com/RestaurantApp/helpers"
 	"github.com/RestaurantApp/models"
+	"github.com/gin-gonic/gin"
 )
 
 // GetOrders retrieves all orders in the system (admin only)
@@ -76,6 +76,18 @@ func CreateOrder() gin.HandlerFunc {
 
 		if order.TableID == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Table ID is required"})
+			return
+		}
+
+		// Validate that the table exists
+		var tableExists int64
+		if err := databases.DB.WithContext(ctx).Model(&models.Table{}).Where("table_id = ?", order.TableID).Count(&tableExists).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to verify table information. Please try again later."})
+			return
+		}
+
+		if tableExists == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "The table referenced does not exist"})
 			return
 		}
 
