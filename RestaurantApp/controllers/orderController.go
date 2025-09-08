@@ -91,6 +91,20 @@ func CreateOrder() gin.HandlerFunc {
 			return
 		}
 
+		// Check if table is already occupied by an active order
+		var activeOrderCount int64
+		if err := databases.DB.WithContext(ctx).Model(&models.Order{}).
+			Where("table_id = ? AND order_status NOT IN ?", order.TableID, []string{"completed", "cancelled"}).
+			Count(&activeOrderCount).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to check table availability. Please try again later."})
+			return
+		}
+
+		if activeOrderCount > 0 {
+			c.JSON(http.StatusConflict, gin.H{"error": "This table is already occupied by an active order. Please choose a different table."})
+			return
+		}
+
 		order.OrderDate = time.Now()
 		order.OrderStatus = "pending"
 
