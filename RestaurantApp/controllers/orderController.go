@@ -60,7 +60,7 @@ func GetOrder() gin.HandlerFunc {
 		orderId := c.Param("order_id")
 		var order models.Order
 
-		if err := databases.DB.WithContext(ctx).Where("order_id = ?", orderId).First(&order).Error; err != nil {
+		if err := databases.DB.WithContext(ctx).Preload("OrderItems").Where("order_id = ?", orderId).First(&order).Error; err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "The requested order could not be found"})
 			return
 		}
