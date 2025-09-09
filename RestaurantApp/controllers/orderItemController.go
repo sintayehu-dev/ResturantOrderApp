@@ -22,13 +22,32 @@ func GetOrderItems() gin.HandlerFunc {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
+		// Pagination params
+		pagination := helpers.GetPaginationParams(c)
+		offset := helpers.GetOffset(pagination.Page, pagination.Limit)
+
 		var orderItems []models.OrderItem
-		if err := databases.DB.WithContext(ctx).Find(&orderItems).Error; err != nil {
+		var total int64
+
+		if err := databases.DB.WithContext(ctx).Model(&models.OrderItem{}).Count(&total).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to count order items"})
+			return
+		}
+
+		if err := databases.DB.WithContext(ctx).
+			Offset(offset).
+			Limit(pagination.Limit).
+			Find(&orderItems).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to retrieve order items. Please try again later."})
 			return
 		}
 
-		c.JSON(http.StatusOK, orderItems)
+		paginationInfo := helpers.CreatePaginationResponse(pagination.Page, pagination.Limit, total)
+
+		c.JSON(http.StatusOK, gin.H{
+			"data":       orderItems,
+			"pagination": paginationInfo,
+		})
 	}
 }
 
@@ -119,9 +138,9 @@ func CreateOrderItem() gin.HandlerFunc {
 			orderItem = existingOrderItem
 		} else {
 			// If item doesn't exist, create a new one
-		if err := databases.DB.WithContext(ctx).Create(&orderItem).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to add item to the order. Please try again later."})
-			return
+			if err := databases.DB.WithContext(ctx).Create(&orderItem).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to add item to the order. Please try again later."})
+				return
 			}
 		}
 
@@ -300,12 +319,31 @@ func GetOrderItemsByOrder() gin.HandlerFunc {
 			return
 		}
 
+		// Pagination for items in order
+		pagination := helpers.GetPaginationParams(c)
+		offset := helpers.GetOffset(pagination.Page, pagination.Limit)
+
 		var orderItems []models.OrderItem
-		if err := databases.DB.WithContext(ctx).Where("order_id = ?", orderId).Find(&orderItems).Error; err != nil {
+		var total int64
+
+		if err := databases.DB.WithContext(ctx).Model(&models.OrderItem{}).Where("order_id = ?", orderId).Count(&total).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to count order items"})
+			return
+		}
+
+		if err := databases.DB.WithContext(ctx).Where("order_id = ?", orderId).
+			Offset(offset).
+			Limit(pagination.Limit).
+			Find(&orderItems).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to retrieve order items. Please try again later."})
 			return
 		}
 
-		c.JSON(http.StatusOK, orderItems)
+		paginationInfo := helpers.CreatePaginationResponse(pagination.Page, pagination.Limit, total)
+
+		c.JSON(http.StatusOK, gin.H{
+			"data":       orderItems,
+			"pagination": paginationInfo,
+		})
 	}
 }

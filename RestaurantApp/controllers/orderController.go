@@ -22,13 +22,32 @@ func GetOrders() gin.HandlerFunc {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
+		// Pagination params
+		pagination := helpers.GetPaginationParams(c)
+		offset := helpers.GetOffset(pagination.Page, pagination.Limit)
+
 		var orders []models.Order
-		if err := databases.DB.WithContext(ctx).Find(&orders).Error; err != nil {
+		var total int64
+
+		if err := databases.DB.WithContext(ctx).Model(&models.Order{}).Count(&total).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to count orders"})
+			return
+		}
+
+		if err := databases.DB.WithContext(ctx).
+			Offset(offset).
+			Limit(pagination.Limit).
+			Find(&orders).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to retrieve orders. Please try again later."})
 			return
 		}
 
-		c.JSON(http.StatusOK, orders)
+		paginationInfo := helpers.CreatePaginationResponse(pagination.Page, pagination.Limit, total)
+
+		c.JSON(http.StatusOK, gin.H{
+			"data":       orders,
+			"pagination": paginationInfo,
+		})
 	}
 }
 

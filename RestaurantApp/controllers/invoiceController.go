@@ -22,13 +22,32 @@ func GetInvoices() gin.HandlerFunc {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
+		// Pagination params
+		pagination := helpers.GetPaginationParams(c)
+		offset := helpers.GetOffset(pagination.Page, pagination.Limit)
+
 		var invoices []models.Invoice
-		if err := databases.DB.WithContext(ctx).Find(&invoices).Error; err != nil {
+		var total int64
+
+		if err := databases.DB.WithContext(ctx).Model(&models.Invoice{}).Count(&total).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to count invoices"})
+			return
+		}
+
+		if err := databases.DB.WithContext(ctx).
+			Offset(offset).
+			Limit(pagination.Limit).
+			Find(&invoices).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to retrieve invoices. Please try again later."})
 			return
 		}
 
-		c.JSON(http.StatusOK, invoices)
+		paginationInfo := helpers.CreatePaginationResponse(pagination.Page, pagination.Limit, total)
+
+		c.JSON(http.StatusOK, gin.H{
+			"data":       invoices,
+			"pagination": paginationInfo,
+		})
 	}
 }
 
