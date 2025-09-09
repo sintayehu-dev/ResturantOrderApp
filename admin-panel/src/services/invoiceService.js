@@ -53,11 +53,12 @@ invoiceApi.interceptors.response.use(
 );
 
 const invoiceService = {
-  // Get all invoices
-  getAllInvoices: async () => {
+  // Get all invoices (supports pagination)
+  getAllInvoices: async (params = { page: 1, limit: 50 }) => {
     try {
-      const response = await invoiceApi.get('');
-      return response.data;
+      const response = await invoiceApi.get('', { params });
+      // Support both paginated and legacy array responses
+      return response.data.data || response.data;
     } catch (error) {
       throw handleApiError(error);
     }

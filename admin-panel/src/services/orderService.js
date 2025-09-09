@@ -57,11 +57,27 @@ orderApi.interceptors.response.use(
 );
 
 const orderService = {
-  // Get all orders - Admin only
-  getAllOrders: async () => {
+  // Get all orders - Admin only (supports pagination)
+  getAllOrders: async (params = { page: 1, limit: 50 }) => {
     try {
-      const response = await orderApi.get('');
+      const response = await orderApi.get('', { params });
       // Handle paginated response - return data array
+      return response.data.data || response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+
+  // Get current user's orders (supports pagination)
+  getUserOrders: async (params = { page: 1, limit: 50 }) => {
+    try {
+      const response = await axios.get(`${cleanBaseUrl}/user/orders`, {
+        params,
+        headers: {
+          'Authorization': getAuthToken(),
+          'Content-Type': 'application/json',
+        }
+      });
       return response.data.data || response.data;
     } catch (error) {
       throw handleApiError(error);
@@ -111,7 +127,7 @@ const orderService = {
   // Get next order ID - Helper function (not an API endpoint)
   getNextOrderId: async () => {
     try {
-      const orders = await orderService.getAllOrders();
+      const orders = await orderService.getAllOrders({ page: 1, limit: 10000 });
       if (!orders || !Array.isArray(orders) || orders.length === 0) return 'order-001';
       
       // Extract numbers from order_id like "order-004"

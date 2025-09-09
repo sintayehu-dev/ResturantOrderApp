@@ -53,11 +53,12 @@ orderItemApi.interceptors.response.use(
 );
 
 const orderItemService = {
-  // Get all order items
-  getAllOrderItems: async () => {
+  // Get all order items (supports pagination)
+  getAllOrderItems: async (params = { page: 1, limit: 50 }) => {
     try {
-      const response = await orderItemApi.get('');
-      return response.data;
+      const response = await orderItemApi.get('', { params });
+      // Support both paginated and legacy array responses
+      return response.data.data || response.data;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -73,11 +74,12 @@ const orderItemService = {
     }
   },
 
-  // Get order items by order ID
-  getOrderItemsByOrderId: async (orderId) => {
+  // Get order items by order ID (supports pagination)
+  getOrderItemsByOrderId: async (orderId, params = { page: 1, limit: 50 }) => {
     try {
-      const response = await orderItemApi.get(`/orders/${orderId}/items`);
-      return response.data;
+      const response = await orderItemApi.get(`/orders/${orderId}/items`, { params });
+      // Support both paginated and legacy array responses
+      return response.data.data || response.data;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -116,7 +118,7 @@ const orderItemService = {
   // Get next order item ID
   getNextOrderItemId: async () => {
     try {
-      const items = await orderItemService.getAllOrderItems();
+      const items = await orderItemService.getAllOrderItems({ page: 1, limit: 10000 });
       if (!items || items.length === 0) return 'item-001';
       const numbers = items
         .map(item => {
